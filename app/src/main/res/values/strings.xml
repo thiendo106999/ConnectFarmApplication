@@ -2,4 +2,5 @@
     <string name="app_name">ConnectFarmApplication</string>
     <string name="resend">Bạn không nhận được mã xác thực?    </string>
     <string name="re_send"><u>Gửi lại mã.</u></string>
+    <string name="full_name">Họ Và Tên</string>
 </resources>

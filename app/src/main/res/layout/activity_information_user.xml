@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".ui.InformationUserActivity">
+
+
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true">
+
+            <include
+                android:id="@+id/logo"
+                layout="@layout/logo" />
+
+            <TextView
+                android:id="@+id/tv_full_name"
+                style="@style/textViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/full_name" />
+
+            <EditText
+                android:id="@+id/etFullName"
+                style="@style/etViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_full_name"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="Nguyễn Văn A"
+                android:inputType="text"
+                android:text="Do Huu Thien"
+                android:maxLength="50"
+                android:paddingStart="20dp"
+                android:textColorHint="@color/silverText" />
+
+            <TextView
+                android:id="@+id/tv_job"
+                style="@style/textViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etFullName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="5dp"
+                android:text="Nghề nghiệp" />
+
+            <EditText
+                android:id="@+id/et_job"
+                style="@style/etViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_job"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/custom_bt_login"
+                android:hint="Nông dân"
+                android:text="chu tich"
+                android:inputType="text"
+                android:maxLength="50"
+                android:paddingStart="20dp"
+                android:textColorHint="@color/silverText" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                style="@style/textViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_job"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="5dp"
+                android:text="Địa chỉ" />
+
+            <EditText
+                android:id="@+id/et_address"
+                style="@style/etViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_address"
+                android:text="Long AN"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="Cần Thơ"
+                android:inputType="text"
+                android:maxLength="100"
+                android:paddingStart="20dp"
+                android:textColorHint="@color/silverText" />
+
+            <TextView
+                android:id="@+id/tv_age"
+                style="@style/textViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_address"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="5dp"
+                android:focusable="false"
+                android:text="Năm sinh" />
+
+            <EditText
+                android:id="@+id/et_year_born"
+                style="@style/etViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_age"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/custom_bt_login"
+                android:hint="1995"
+                android:inputType="number"
+                android:text="1999"
+                android:paddingStart="20dp"
+                android:textColorHint="@color/silverText" />
+
+
+            <TextView
+                android:id="@+id/tv_gender"
+                style="@style/textViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_year_born"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="5dp"
+                android:text="Giới tính" />
+
+
+            <RadioGroup
+                android:id="@+id/rgGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_gender"
+                android:layout_alignStart="@+id/tv_full_name"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/rgGender"
+                    android:layout_marginEnd="10dp"
+                    android:buttonTint="@color/black"
+                    android:checked="true"
+                    android:text="Nam"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/rgGender"
+                    android:buttonTint="@color/black"
+                    android:checked="false"
+                    android:text="Nữ"
+                    android:textColor="@color/black" />
+
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/bt_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rgGender"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/custom_bt_login"
+                android:text="Tiếp tục"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+
+    </ScrollView>
+</layout>

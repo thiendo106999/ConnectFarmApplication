@@ -1,25 +1,29 @@
 package com.example.connectfarmapplication.ui;
 
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+
 import com.example.connectfarmapplication.MainActivity;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -33,12 +37,13 @@ public class LoginActivity extends BaseActivity {
     private String mVerifyId;
     private final String TAG  = "Login";
     private SharedPreferences sharedPreferences;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getToken();
+        getActivity();
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         loginBinding.setObj(LoginActivity.this);
 
@@ -98,8 +103,6 @@ public class LoginActivity extends BaseActivity {
             enabledVerifyForm(false);
         });
     }
-
-
 
     private void startPhoneNumberVerification() {
         String phoneNumber = getPhoneNumberInFormatVietNamese();
@@ -167,13 +170,37 @@ public class LoginActivity extends BaseActivity {
         return "+84" + phoneNumber.substring(1);
     }
 
-    private void getToken(){
+    private void getActivity() {
         sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
-        if(token != null){
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+        if (token != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef;
+
+            myRef = database.getReference("Users");
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.hasChild(token)) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("token", token);
+                        startActivity(intent);
+                    } else {
+                        intent = new Intent(LoginActivity.this, InformationUserActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("token", token);
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
         }
 
     }

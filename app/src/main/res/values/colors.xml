@@ -13,5 +13,6 @@
     <color name="background">#CFF4D2</color>
     <color name="silverText">#918F8F</color>
     <color name="silver">#EFEEED</color>
+    <color name="colorTextLogin">#056712</color>
     <color name="space_transparent">#00000000</color>
 </resources>
