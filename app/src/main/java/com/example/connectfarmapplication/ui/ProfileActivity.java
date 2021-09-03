@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.connectfarmapplication.R;
 
-public class ShowPriceActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_price);
+        setContentView(R.layout.activity_profile);
     }
 }

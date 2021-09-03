@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.connectfarmapplication">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +13,29 @@
         android:theme="@style/Theme.ConnectFarmApplication"
         android:windowSoftInputMode="adjustResize">
         <activity
+            android:name=".ui.ProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/title_activity_fullscreen"
+            android:theme="@style/Theme.ConnectFarmApplication.Fullscreen" />
+        <activity
+            android:name=".ui.PostActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.ShowPriceActivity"
             android:exported="true" />
         <activity
             android:name=".ui.InformationUserActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ui.VerifyActivity"
             android:exported="true" />
@@ -24,16 +44,10 @@
             android:exported="true" />
         <activity
             android:name=".ui.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

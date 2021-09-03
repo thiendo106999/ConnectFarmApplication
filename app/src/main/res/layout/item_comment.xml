@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="user"
+            type="com.example.connectfarmapplication.models.User" />
+        <variable
+            name="comment"
+            type="com.example.connectfarmapplication.models.Comment" />
+    </data>
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        android:layout_margin="10dp"
+        android:backgroundTint="#E5F1FF">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="20dp"
+                android:id="@+id/avatar"
+                setThumbnail="@{user.avatar}"
+                android:src="@drawable/meo"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{user.full_name}"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:textColor="#004C80"
+                android:id="@+id/nick_name"
+                android:layout_toEndOf="@id/avatar"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{comment.content}"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:textColor="#0066AA"
+                android:id="@+id/content"
+                android:layout_below="@id/nick_name"
+                android:layout_toEndOf="@id/avatar"/>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
