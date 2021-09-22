@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="obj"
             type="com.example.connectfarmapplication.ui.LoginActivity" />
@@ -17,7 +16,13 @@
         android:orientation="vertical"
         tools:context=".ui.LoginActivity">
 
-
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:shadowColor="@color/black"
+            android:id="@+id/progress"/>
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -26,7 +31,7 @@
             android:layout_marginHorizontal="20dp"
             android:text="Đăng nhập"
             android:textAlignment="center"
-            android:textColor="#FF5722"
+            android:textColor="#D61C51"
             android:textSize="25sp" />
 
         <LinearLayout
@@ -36,7 +41,7 @@
             android:layout_below="@id/title"
             android:layout_centerInParent="true"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
@@ -45,6 +50,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:lines="2"
+                android:textColor="@color/text_color_login"
                 android:text="Bạn cần nhập vào số điện thoại để đăng ký:"
                 android:textAlignment="center"
                 android:textSize="14sp" />
@@ -55,10 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
                 android:background="@drawable/custom_bt_login"
-                android:ems="10"
-                android:hint="09***********"
                 android:inputType="phone"
-                android:text="0348290030"
+                android:textColor="@color/black"
                 android:textAlignment="center" />
 
             <Button
@@ -68,7 +72,7 @@
                 android:layout_marginHorizontal="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/custom_bt_login"
-                android:backgroundTint="#00FF7D"
+                android:backgroundTint="@color/button_login"
                 android:text="Gửi" />
         </LinearLayout>
 
@@ -77,6 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
+            android:visibility="gone"
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
@@ -87,6 +92,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:lines="2"
+                android:textColor="@color/text_color_login"
                 android:text="Nhập mã xác thực"
                 android:textAlignment="center"
                 android:textSize="14sp" />
@@ -97,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="30dp"
                 android:background="@drawable/custom_bt_login"
-                android:hint=""
+                android:textColor="@color/black"
                 android:textAlignment="center" />
 
             <LinearLayout
@@ -110,6 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:clickable="true"
+                    android:textColor="@color/text_color_login"
                     android:text="@string/resend"
                     android:textAlignment="center" />
                 <TextView
@@ -138,8 +145,9 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
+                    android:textColor="#FBFBFB"
                     android:background="@drawable/custom_bt_login"
-                    android:backgroundTint="#00FF7D"
+                    android:backgroundTint="@color/button_login"
                     android:text="Gửi" />
 
                 <Button
@@ -148,9 +156,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_weight="1"
+                    android:textColor="#FBFBFB"
                     android:background="@drawable/custom_bt_login"
-                    android:backgroundTint="#00FF7D"
-                    android:text="trở về" />
+                    android:backgroundTint="@color/button_login"
+                    android:text="Trở về" />
             </LinearLayout>
 
 

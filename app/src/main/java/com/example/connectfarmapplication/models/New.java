@@ -1,6 +1,5 @@
 package com.example.connectfarmapplication.models;
 
-import android.media.Image;
 
 import java.util.ArrayList;
 

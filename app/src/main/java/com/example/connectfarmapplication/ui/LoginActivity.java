@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -43,11 +44,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActivity();
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        getActivity();
         loginBinding.setObj(LoginActivity.this);
-
-
 
         enabledVerifyForm(false);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -60,39 +59,56 @@ public class LoginActivity extends BaseActivity {
         //send phone number to get opt verify
         loginBinding.btnSent.setOnClickListener(v -> {
             String phoneNumber = loginBinding.edtPhoneNumber.getText().toString().trim();
+            disableTouchScreen();
+            loginBinding.progress.setVisibility(View.VISIBLE);
             if(phoneNumber.isEmpty() || !validatePhoneNumber(phoneNumber)){
                 loginBinding.edtPhoneNumber.setError("Số điện thoại không hợp lệ, vui lòng kiểm tra lại");
+                enableTouchScreen();
+                loginBinding.progress.setVisibility(View.GONE);
             }else{
                 startPhoneNumberVerification();
-                enabledVerifyForm(true);
             }
         });
-
-        //send opt to login
-        loginBinding.btnSentOtp.setOnClickListener(v->{
-            String code = loginBinding.edtOpt.getText().toString().trim();
-            verifyPhoneNumberWithCode(mVerifyId, code );
-        });
-
         callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                signInWithPhoneAuthCredential(phoneAuthCredential);
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-
+                Log.e(TAG, "onVerificationFailed: "+ e.getMessage() );
+                Toast.makeText(LoginActivity.this, "Số điện thoại của bạn không hợp lệ", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken token) {
                 super.onCodeSent(s, forceResendingToken);
-
                 mVerifyId =  s;
                 forceResendingToken = token;
+                enabledVerifyForm(true);
+                enableTouchScreen();
+                loginBinding.progress.setVisibility(View.GONE);
             }
         };
+
+        //send opt to login
+        loginBinding.btnSentOtp.setOnClickListener(v->{
+            disableTouchScreen();
+            loginBinding.progress.setVisibility(View.VISIBLE);
+            String code = loginBinding.edtOpt.getText().toString().trim();
+            if(!code.equals("")){
+                verifyPhoneNumberWithCode(mVerifyId, code );
+            } else {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(LoginActivity.this, "Vui lòng nhập mã để xác thực", Toast.LENGTH_LONG).show();
+                enableTouchScreen();
+                loginBinding.progress.setVisibility(View.GONE);
+            }
+        });
 
         //resend opt code
         loginBinding.resend.setOnClickListener(v->{
@@ -101,6 +117,8 @@ public class LoginActivity extends BaseActivity {
 
         loginBinding.btnBack.setOnClickListener(v -> {
             enabledVerifyForm(false);
+            enableTouchScreen();
+            loginBinding.progress.setVisibility(View.GONE);
         });
     }
 
@@ -118,24 +136,26 @@ public class LoginActivity extends BaseActivity {
     private void verifyPhoneNumberWithCode(String verificationId, String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithPhoneAuthCredential(credential);
+
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        loginBinding.progress.setVisibility(View.VISIBLE);
+        disableTouchScreen();
         firebaseAuth.signInWithCredential(credential)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
-
                     sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("token", user.getUid());
                     editor.apply();
-
+                    getActivity();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: "+ e.getMessage() );
-                    }
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "onFailure: "+ e.getMessage() );
+                    Toast.makeText(LoginActivity.this, "Mã xác thực không hợp lệ, vui lòng nhập lại", Toast.LENGTH_SHORT).show();
+                    loginBinding.progress.setVisibility(View.GONE);
+                    enableTouchScreen();
                 });
     }
 
@@ -162,12 +182,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     private boolean validatePhoneNumber(String number){
-        return Pattern.compile("(84|0[3|5|7|8|9])+([0-9]{8})").matcher(number).matches();
+       // return Pattern.compile("(84|0[3|5|7|8|9])+([0-9]{8})").matcher(number).matches();
+        return true;
     }
 
     private String getPhoneNumberInFormatVietNamese(){
         String phoneNumber = loginBinding.edtPhoneNumber.getText().toString().trim();
-        return "+84" + phoneNumber.substring(1);
+        //return "+84" + phoneNumber.substring(1);
+        return "+1 555-521-5554";
     }
 
     private void getActivity() {
@@ -176,22 +198,18 @@ public class LoginActivity extends BaseActivity {
         if (token != null) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef;
-
             myRef = database.getReference("Users");
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.hasChild(token)) {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.putExtra("token", token);
-                        startActivity(intent);
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
                     } else {
                         intent = new Intent(LoginActivity.this, InformationUserActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.putExtra("token", token);
-                        startActivity(intent);
                     }
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("token", token);
+                    startActivity(intent);
                 }
 
                 @Override
@@ -199,9 +217,6 @@ public class LoginActivity extends BaseActivity {
 
                 }
             });
-
-
         }
-
     }
 }

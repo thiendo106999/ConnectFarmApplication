@@ -10,6 +10,8 @@
 
     <color name="bt_login">#D1F600</color>
     <color name="text_link">#10FFCF</color>
+    <color name="text_color_login">#0228FD</color>
+    <color name="button_login">#FF9800</color>
     <color name="background">#CFF4D2</color>
     <color name="silverText">#918F8F</color>
     <color name="silver">#EFEEED</color>
@@ -21,4 +23,5 @@
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
     <color name="my_statusbar_color">#E7970C</color>
+    <color name="yellowmain2">#FFDD78</color>
 </resources>

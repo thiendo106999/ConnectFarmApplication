@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -32,15 +33,12 @@ public class PostActivity extends AppCompatActivity {
     private ArrayList<New> listNews;
     private String token;
     DatabaseReference reference;
-    ValueEventListener seenListener ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         postBinding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
         token = Utils.getToken(this);
-
-        // seenMessage(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         if (!token.equals("1")) {
             getUser(token);
@@ -49,6 +47,10 @@ public class PostActivity extends AppCompatActivity {
 
             listNews = getListNew();
         }
+
+        postBinding.showTweetActivity.setOnClickListener(v->{
+            startActivity(new Intent(PostActivity.this, PostTweetActivity.class));
+        });
     }
     private ArrayList<New> getListNew() {
         ArrayList<New> listNews = new ArrayList<>();
@@ -78,7 +80,6 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
-
         return listNews;
     }
 
@@ -89,12 +90,9 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-
-
                     Glide.with(PostActivity.this)
                             .load(user.getAvatar()).placeholder(R.drawable.bg_login)
                             .into(postBinding.avatar);
-
             }
 
             @Override

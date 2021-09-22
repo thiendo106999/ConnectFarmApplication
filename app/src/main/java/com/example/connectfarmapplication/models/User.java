@@ -4,14 +4,12 @@ package com.example.connectfarmapplication.models;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
+import com.example.connectfarmapplication.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class User {
     private String id;
-
-    private String nick_name;
-
     private String year_born;
     private String gender;
     private String email;
@@ -20,7 +18,6 @@ public class User {
     private String full_name;
     private String status = "online";
     private String avatar = "default";
-
 
     public String getStatus() {
         return status;
@@ -36,14 +33,6 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getNick_name() {
-        return nick_name;
-    }
-
-    public void setNick_name(String nick_name) {
-        this.nick_name = nick_name;
     }
 
     public String getYear_born() {
@@ -99,7 +88,6 @@ public class User {
 
     public User(String id, String nick_name, String avatar) {
         this.id = id;
-        this.nick_name = nick_name;
         this.avatar = avatar;
     }
 
@@ -107,7 +95,6 @@ public class User {
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", nick_name='" + nick_name + '\'' +
                 ", year_born='" + year_born + '\'' +
                 ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +
@@ -130,6 +117,7 @@ public class User {
     public static void loadAvatar(CircleImageView view, String url) {
         Glide.with(view.getContext())
                 .load(url)
+                .placeholder(R.drawable.dandelion)
                 .into(view);
     }
 }

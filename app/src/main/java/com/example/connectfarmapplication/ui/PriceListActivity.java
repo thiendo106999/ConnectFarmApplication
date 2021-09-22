@@ -1,12 +1,16 @@
 package com.example.connectfarmapplication.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.connectfarmapplication.R;
+import com.example.connectfarmapplication.adapters.PriceAdapter;
 import com.example.connectfarmapplication.databinding.ActivityPriceListBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -19,7 +23,6 @@ import java.util.Objects;
 public class PriceListActivity extends AppCompatActivity {
     ActivityPriceListBinding binding;
     ArrayAdapter<String> arrayAdapter;
-    private final String TAG = "LOG";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -28,14 +31,17 @@ public class PriceListActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(PriceListActivity.this, R.layout.activity_price_list);
 
         getProvinces();
-
         getDate();
 
+        binding.back.setOnClickListener(v->{
+            finish();
+        });
         binding.search.setOnClickListener(v -> {
             String date = binding.date.getSelectedItem().toString();
             String kind = getKind();
             getResult(date, kind, "An Giang");
         });
+
     }
 
     private String getKind(){
@@ -55,7 +61,7 @@ public class PriceListActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         dates.add(document.getString("date"));
                     }
-                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, android.R.layout.simple_list_item_1, dates);
+                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, R.layout.spinner_text, dates);
                     binding.date.setAdapter(arrayAdapter);
                 });
 
@@ -69,7 +75,7 @@ public class PriceListActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         provinces.add(document.getString("name"));
                     }
-                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, android.R.layout.simple_list_item_1, provinces);
+                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, R.layout.spinner_text, provinces);
                     binding.province.setAdapter(arrayAdapter);
                     binding.province.setSelection(0);
                 });
@@ -78,25 +84,29 @@ public class PriceListActivity extends AppCompatActivity {
     }
 
     private void getResult(String date, String kind, String province) {
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> prices = new ArrayList<>();
+
         db.collection("prices")
                 .get()
                 .addOnCompleteListener(task -> {
-
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (Objects.equals(document.getString("date"), date)
                                 && Objects.equals(document.getString("agricultural_id"), kind)) {
-                            result.add(document.getString("name") + "    " + document.getString("price"));
+                            names.add(document.getString("name") );
+                            prices.add(document.getString("price"));
                         }
                     }
-                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, android.R.layout.simple_list_item_1, result);
-                    binding.list.setAdapter(arrayAdapter);
+                    PriceAdapter adapter = new PriceAdapter(prices, names, PriceListActivity.this);
+                    LinearLayoutManager manager = new LinearLayoutManager(PriceListActivity.this);
+                    binding.listPrice.setAdapter(adapter);
+                    binding.listPrice.setLayoutManager(manager);
 
                 });
     }
 
     private void addData() {
-        String date = "4-9-2021";
+        String date = "19-9-2021";
         Map<String, Object> data = new HashMap<>();
         data.put("agricultural_id", "Lúa Gạo");
         data.put("date", date);
