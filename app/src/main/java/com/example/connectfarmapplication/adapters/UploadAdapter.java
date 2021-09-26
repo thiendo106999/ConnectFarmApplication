@@ -49,11 +49,9 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull UploadAdapter.ViewHolder holder, int position) {
-
         Glide.with(context)
                 .load(listImage.get(position).getImage())
                 .into(holder.image);
-
     }
 
     @Override

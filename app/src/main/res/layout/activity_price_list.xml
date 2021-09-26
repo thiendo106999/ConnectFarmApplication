@@ -6,26 +6,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.PriceListActivity"
-        android:background="@color/white"
-       >
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-           >
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="#E4016873">
 
                 <Button
+                    android:id="@+id/back"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_back"
                     android:layout_marginEnd="20dp"
-                    android:id="@+id/back"/>
+                    android:background="@drawable/ic_back" />
+
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
@@ -34,8 +34,22 @@
                     android:text="Bảng giá cả nông sản"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
-            </Toolbar>
 
+                <TextView
+                    android:id="@+id/show_filter"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_drop_down_white"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="Ẩn"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </Toolbar>
             <LinearLayout
                 android:id="@+id/ln_filter"
                 android:layout_width="match_parent"
@@ -54,15 +68,15 @@
                         android:layout_height="wrap_content"
                         android:text="Tỉnh thành:  "
                         android:textColor="@color/text_color_login"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"/>
 
                     <Spinner
                         android:id="@+id/province"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="25dp"
-                        android:shadowColor="@color/text_color_login"
-                        android:popupBackground="@color/white" />
+                        android:popupBackground="@color/white"
+                        android:shadowColor="@color/text_color_login" />
                 </LinearLayout>
 
                 <TextView
@@ -96,6 +110,7 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:text="Lúa gạo"
+                            android:shadowColor="@color/text_color_login"
                             android:textColor="@color/text_color_login" />
 
                         <RadioButton
@@ -103,6 +118,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Hoa màu"
+                            android:shadowColor="@color/text_color_login"
                             android:textColor="@color/text_color_login" />
 
                         <RadioButton
@@ -110,6 +126,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Trái cây"
+                            android:shadowColor="@color/text_color_login"
                             android:textColor="@color/text_color_login" />
                     </RadioGroup>
                 </LinearLayout>
@@ -137,10 +154,11 @@
                     <Spinner
                         android:id="@+id/date"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="65dp"
                         android:popupBackground="@color/white"
-                        android:shadowColor="@color/text_color_login"
-                        android:layout_marginStart="65dp" />
+                        android:drawableEnd="@drawable/ic_drop_down"
+                        android:shadowColor="@color/text_color_login" />
                 </LinearLayout>
 
                 <Button
@@ -155,60 +173,64 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="Bảng giá"
-                android:textColor="@color/text_color_login"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="2"
-               android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="10dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:text="Tên nông sản"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:textColor="@color/black"
-                   />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Giá"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"/>
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:text="Bảng giá"
+                    android:textColor="@color/text_color_login"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:text="Tên nông sản"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Giá"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/silver" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/silver" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp"
-                />
-
 
         </LinearLayout>
-
     </ScrollView>
 </layout>

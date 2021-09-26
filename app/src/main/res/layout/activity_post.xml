@@ -4,12 +4,20 @@
     android:background="@color/white">
 
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.PostActivity">
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/progress"
+            android:visibility="gone"/>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-
-            tools:context=".ui.PostActivity">
+            android:orientation="vertical">
 
             <!-- TODO: Update blank fragment layout -->
             <androidx.core.widget.NestedScrollView
@@ -62,6 +70,7 @@
                         android:layout_height="4dp"
                         android:layout_marginTop="10dp"
                         android:background="@color/silver" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rcv_list_new"
                         android:layout_width="match_parent"
@@ -70,5 +79,6 @@
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>
+    </RelativeLayout>
 
 </layout>

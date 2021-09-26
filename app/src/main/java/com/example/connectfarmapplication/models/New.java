@@ -9,6 +9,7 @@ public class New {
     private String likes;
     private String user_id;
     private ArrayList<Image> images;
+    private String urlVideo;
     private String tag;
     private String time;
 
@@ -52,6 +53,13 @@ public class New {
         this.content = content;
     }
 
+    public String getUrlVideo() {
+        return urlVideo;
+    }
+
+    public void setUrlVideo(String urlVideo) {
+        this.urlVideo = urlVideo;
+    }
 
     public String getTag() {
         return tag;

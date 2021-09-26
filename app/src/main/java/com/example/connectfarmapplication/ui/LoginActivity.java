@@ -45,7 +45,14 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        getActivity();
+        sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
+        if (token != null) {
+            intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("token", token);
+            startActivity(intent);
+        }
         loginBinding.setObj(LoginActivity.this);
 
         enabledVerifyForm(false);

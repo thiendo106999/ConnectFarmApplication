@@ -71,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="50dp"
                 android:layout_marginTop="20dp"
+                android:textColor="@color/white"
                 android:background="@drawable/custom_bt_login"
                 android:backgroundTint="@color/button_login"
                 android:text="Gửi" />

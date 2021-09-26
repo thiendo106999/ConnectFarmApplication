@@ -11,4 +11,9 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="checkbox">
+        <item name="android:textColor">@color/text_color_login</item>
+        <item name="android:shadowColor">@color/text_color_login</item>
+        <item name="buttonTint">@color/text_color_login</item>
+    </style>
 </resources>

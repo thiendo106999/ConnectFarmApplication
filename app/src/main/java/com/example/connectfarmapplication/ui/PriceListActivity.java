@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class PriceListActivity extends AppCompatActivity {
+public class PriceListActivity extends BaseActivity {
     ActivityPriceListBinding binding;
     ArrayAdapter<String> arrayAdapter;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -42,6 +42,9 @@ public class PriceListActivity extends AppCompatActivity {
             getResult(date, kind, "An Giang");
         });
 
+        binding.showFilter.setOnClickListener(v->{
+            binding.lnFilter.setVisibility(binding.lnFilter.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+        });
     }
 
     private String getKind(){
@@ -64,10 +67,7 @@ public class PriceListActivity extends AppCompatActivity {
                     arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, R.layout.spinner_text, dates);
                     binding.date.setAdapter(arrayAdapter);
                 });
-
     }
-
-
     private ArrayList<String> getProvinces() {
         ArrayList<String> provinces = new ArrayList<>();
         db.collection("provinces").get()

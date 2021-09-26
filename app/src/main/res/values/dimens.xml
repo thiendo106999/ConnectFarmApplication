@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="widthVideo">120dp</dimen>
+    <dimen name="heightVideo">100dp</dimen>
+    <dimen name="marginStartVideo">16dp</dimen>
+    <dimen name="marginTopVideo">10dp</dimen>
+    <dimen name="marginStartVideoName">10dp</dimen>
+    <dimen name="marginTopVideoName">17dp</dimen>
+</resources>
