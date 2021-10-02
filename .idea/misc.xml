@@ -10,6 +10,7 @@
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable/ic_cart.xml" value="0.2203125" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable/ic_drop_down.xml" value="0.1140625" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable/ic_give_money.xml" value="0.2203125" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_articles.xml" value="0.14947916666666666" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_base.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_fullscreen.xml" value="0.1515625" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_information_user.xml" value="0.2" />
@@ -22,10 +23,13 @@
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_registration.xml" value="0.19947916666666668" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_sell.xml" value="0.25" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_show_price.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_test_acvity.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_verify.xml" value="0.16979166666666667" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/article_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_article.xml" value="0.1" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_comment.xml" value="0.1" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_image.xml" value="0.165625" />
-        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_new.xml" value="0.25" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_new.xml" value="0.15925925925925927" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_price.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_sell.xml" value="0.25" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_upload.xml" value="0.20416666666666666" />

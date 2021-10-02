@@ -1,6 +1,7 @@
 package com.example.connectfarmapplication.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
@@ -31,7 +32,8 @@ public class PriceListActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(PriceListActivity.this, R.layout.activity_price_list);
 
         getProvinces();
-        getDate();
+         getDate();
+
 
         binding.back.setOnClickListener(v->{
             finish();

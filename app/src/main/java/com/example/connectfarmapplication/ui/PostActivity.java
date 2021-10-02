@@ -22,6 +22,7 @@ import com.example.connectfarmapplication.adapters.NewsAdapter;
 import com.example.connectfarmapplication.databinding.ActivityPostBinding;
 import com.example.connectfarmapplication.models.New;
 import com.example.connectfarmapplication.models.User;
+import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,7 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity{
 
     ActivityPostBinding postBinding;
     private NewsAdapter adapter;
@@ -58,6 +59,7 @@ public class PostActivity extends AppCompatActivity {
             getUser(token);
             listNews = getListNew();
         }
+
 
         postBinding.showTweetActivity.setOnClickListener(v -> {
             startActivity(new Intent(PostActivity.this, PostTweetActivity.class));
@@ -111,10 +113,6 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
-
-    }
-
-    private void playVideo(Uri videoUrl) {
 
     }
 }

@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="news"
-            type="com.example.connectfarmapplication.models.New" />
+            name="article"
+            type="com.example.connectfarmapplication.models.Article" />
 
         <variable
             name="user"
@@ -59,7 +58,7 @@
                         android:id="@+id/txt_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{news.time}"
+                        android:text="@{article.createdAt}"
                         android:textColor="@color/silverText"
                         android:textSize="12dp" />
                 </LinearLayout>
@@ -93,7 +92,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="@{news.content}"
+                android:text="@{article.content}"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -112,21 +111,22 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_image" />
 
-               <RelativeLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="250dp"
-                   android:id="@+id/video_layout">
-                   <com.google.android.exoplayer2.ui.PlayerView
-                       android:layout_width="match_parent"
-                       android:layout_height="250dp"
-                       android:id="@+id/video_player"/>
-                   <ImageButton
-                       android:layout_width="80dp"
-                       android:layout_height="80dp"
-                       android:background="@drawable/ic_play"
-                       android:id="@+id/btn_play"
-                       android:layout_centerInParent="true"/>
-               </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:id="@+id/video_layout">
+
+                    <com.google.android.exoplayer2.ui.PlayerView
+                        android:id="@+id/video_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+                    <ImageButton
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/ic_play"
+                        android:id="@+id/btn_play"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
 
 
                 <ImageView
