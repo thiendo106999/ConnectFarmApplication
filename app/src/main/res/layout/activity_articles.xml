@@ -22,12 +22,59 @@
             <!-- TODO: Update blank fragment layout -->
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
+                    <Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="@color/white">
+
+                        <ImageView
+                            android:id="@+id/back"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:clickable="true"
+                            android:padding="10dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_baseline_arrow_back_24" />
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="20dp"
+                            android:text="Góc chia sẻ kinh nghiệm"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/show_filter"
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="20dp"
+                            android:clickable="true"
+                            android:drawableRight="@drawable/ic_drop_down_white"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="Ẩn"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:visibility="gone" />
+                    </Toolbar>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/silver" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -44,12 +91,12 @@
                             android:src="@drawable/dandelion" />
 
                         <LinearLayout
+                            android:id="@+id/show_tweet_activity"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
                             android:layout_marginTop="10dp"
                             android:clickable="true"
                             android:focusable="true"
-                            android:id="@+id/show_tweet_activity"
                             android:orientation="horizontal">
 
                             <TextView

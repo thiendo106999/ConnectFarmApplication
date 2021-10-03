@@ -13,6 +13,8 @@ import androidx.databinding.DataBindingUtil;
 import com.example.connectfarmapplication.MainActivity;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ActivityLoginBinding;
+import com.example.connectfarmapplication.retrofit.APIUtils;
+import com.example.connectfarmapplication.retrofit.DataClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +30,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity {
 
@@ -54,7 +60,6 @@ public class LoginActivity extends BaseActivity {
             startActivity(intent);
         }
         loginBinding.setObj(LoginActivity.this);
-
         enabledVerifyForm(false);
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -203,27 +208,27 @@ public class LoginActivity extends BaseActivity {
         sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
         if (token != null) {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef;
-            myRef = database.getReference("Users");
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            DataClient client = APIUtils.getDataClient();
+            client.checkNewUser(token).enqueue(new Callback<String>() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.hasChild(token)) {
-                        intent = new Intent(LoginActivity.this, MainActivity.class);
-                    } else {
-                        intent = new Intent(LoginActivity.this, InformationUserActivity.class);
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body().equals("true")) {
+                            intent = new Intent(LoginActivity.this, MainActivity.class);
+                        } else {
+                            intent = new Intent(LoginActivity.this, InformationUserActivity.class);
+                        }
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("token", token);
+                        startActivity(intent);
                     }
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("token", token);
-                    startActivity(intent);
                 }
-
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e(TAG, "fails" + t.getMessage());
                 }
             });
+            enableTouchScreen();
         }
     }
 }

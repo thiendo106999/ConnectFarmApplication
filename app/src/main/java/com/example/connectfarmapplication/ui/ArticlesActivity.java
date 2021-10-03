@@ -3,6 +3,8 @@ package com.example.connectfarmapplication.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -59,7 +61,8 @@ public class ArticlesActivity extends AppCompatActivity {
                 binding.progress.setVisibility(View.VISIBLE);
             }
         });
-     //   Log.e("TAG", "onFailure: "+  articleList.size());
-      //  Toast.makeText(ArticlesActivity.this, articleList.size(), Toast.LENGTH_SHORT).show();
+        binding.showTweetActivity.setOnClickListener(v -> {
+            startActivity(new Intent(ArticlesActivity.this, PostTweetActivity.class));
+        });
     }
 }

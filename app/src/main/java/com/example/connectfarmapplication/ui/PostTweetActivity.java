@@ -1,68 +1,67 @@
 package com.example.connectfarmapplication.ui;
 
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
+import android.content.ClipData;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.adapters.UploadAdapter;
-import com.example.connectfarmapplication.adapters.VideoAdapter;
 import com.example.connectfarmapplication.databinding.ActivityPostTweetBinding;
 import com.example.connectfarmapplication.models.Image;
 import com.example.connectfarmapplication.models.New;
+import com.example.connectfarmapplication.models.UploadVideoResponse;
 import com.example.connectfarmapplication.models.Video;
+import com.example.connectfarmapplication.retrofit.APIUtils;
+import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-public class PostTweetActivity extends AppCompatActivity implements SurfaceHolder.Callback{
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class PostTweetActivity extends AppCompatActivity {
 
 
     private ActivityPostTweetBinding statusBinding;
-    private UploadAdapter uploadAdapter;
-    private ArrayList<Image> listImageResource, listImage;
-    private ArrayList<Video> listVideoResource;
+    private ArrayList<Image>  listImage;
     private Video video;
     private final String TAG = "Post tweet activity";
-    private File storage;
+    private static int RESULT_LOAD_VIDEO = 1;
+    private static int RESULT_LOAD_IMAGE = 2;
+    ArrayList<Uri> mArrayUri;
+    Uri videoUri;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         statusBinding = DataBindingUtil.setContentView(this, R.layout.activity_post_tweet);
-
-        listImageResource = getImagePaths();
-        listVideoResource = getVideoPaths();
-
-
-        loadImages();
-        loadVideos();
 
         statusBinding.edtContent.setOnFocusChangeListener((v, hasFocus) -> {
             statusBinding.edtContent.setText("");
@@ -74,145 +73,148 @@ public class PostTweetActivity extends AppCompatActivity implements SurfaceHolde
 
         statusBinding.layout.setOnClickListener(v -> Utils.hideSoftKeyboard(PostTweetActivity.this));
 
-        statusBinding.btChoose.setOnClickListener(v -> {
-            listImage = new ArrayList<>();
-            for (Image image : listImageResource) {
-                if (image.isChosen() && !listImage.contains(image)) {
-                    listImage.add(image);
-                }
-            }
-            uploadAdapter = new UploadAdapter(PostTweetActivity.this, listImage, 2);
-            statusBinding.rvImage.setAdapter(uploadAdapter);
-            statusBinding.rvImage.setLayoutManager(new LinearLayoutManager(PostTweetActivity.this, LinearLayoutManager.HORIZONTAL, false));
-            statusBinding.chooseImage.setVisibility(View.GONE);
-            statusBinding.rvImage.setVisibility(View.VISIBLE);
-        });
-        statusBinding.btChooseVideo.setOnClickListener(v -> {
-
-            for (Video temp : listVideoResource) {
-                if (temp.isChoose()) {
-                    video = temp;
-                    break;
-                }
-            }
-            Log.e(TAG, "onCreate: " + video.getVideoTitle());
-            statusBinding.chooseVideo.setVisibility(View.GONE);
-
-            Glide.with(PostTweetActivity.this)
-                    .load(video.getVideoUri()) // or URI/path
-                    .into(statusBinding.videoThumbnail);
-            statusBinding.videoThumbnail.setVisibility(View.VISIBLE);
-        });
-
-        statusBinding.ivBackImage.setOnClickListener(v -> statusBinding.chooseImage.setVisibility(View.GONE));
-        statusBinding.ivBackVideo.setOnClickListener(v -> statusBinding.chooseVideo.setVisibility(View.GONE));
-
         statusBinding.btnDangBai.setOnClickListener(v -> {
-            postNew();
-            finish();
+           // postNew();
+            if (videoUri != null) {
+                upload(new File(videoUri.getPath()));
+
+            }
+          //  finish();
         });
 
         statusBinding.btnLoadAnh.setOnClickListener(v -> {
-            statusBinding.chooseImage.setVisibility(View.VISIBLE);
+            loadImageFromGallery();
         });
         statusBinding.btnLoadVideo.setOnClickListener(v -> {
-            statusBinding.chooseVideo.setVisibility(View.VISIBLE);
+            loadVideoFromGallery(statusBinding.btnLoadVideo);
         });
     }
 
 
-    private void loadImages() {
-        uploadAdapter = new UploadAdapter(this, listImageResource, 1);
-        statusBinding.rvListImage.setAdapter(uploadAdapter);
-        statusBinding.rvListImage.setLayoutManager(new GridLayoutManager(this, 3));
-    }
 
-    public void loadVideos() {
-        VideoAdapter adapter = new VideoAdapter(this, listVideoResource);
-        statusBinding.rvListVideo.setAdapter(adapter);
-        statusBinding.rvListVideo.setLayoutManager(new LinearLayoutManager(PostTweetActivity.this, LinearLayoutManager.VERTICAL, false));
-    }
 
-    public ArrayList<Video> getVideoPaths() {
-        ArrayList<Video> videos = new ArrayList<>();
-        ContentResolver contentResolver = getContentResolver();
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-
-        Cursor cursor = contentResolver.query(uri, null, null, null, null);
-        //looping through all rows and adding to list
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
-                String data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
-                Video videoModel = new Video();
-                videoModel.setVideoTitle(title);
-                videoModel.setVideoUri(Uri.parse("file://" + data));
-                videoModel .setVideoDuration(convertMillisecondToTime(Long.parseLong(duration)));
-                videos.add(videoModel);
-
-            } while (cursor.moveToNext());
+    private String getTags() {
+        String result = "";
+        if (statusBinding.rice.isChecked()) {
+            result += "#luagao ";
         }
-        return videos;
+        if (statusBinding.vegetable.isChecked()) {
+            result += "#hoamau ";
+        }
+        if (statusBinding.fruits.isChecked()) {
+            result += "#traicay ";
+        }
+        if (statusBinding.phanBon.isChecked()) {
+            result += "#phanbon ";
+        }
+        if (statusBinding.thuocTruSau.isChecked()) {
+            result += "#thuoctrusau ";
+        }
+        if (statusBinding.nongCu.isChecked()) {
+            result += "#nongcu ";
+        }
+        return result;
     }
 
-    public ArrayList<Image> getImagePaths() {
-        Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Images.ImageColumns.DATA};
-        Cursor c = null;
-        SortedSet<String> dirList = new TreeSet<>();
-        ArrayList<Image> resultIAV = new ArrayList<>();
+    public void loadVideoFromGallery(View view) {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, 1);
+    }
+    public void loadImageFromGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(Intent.createChooser(intent, "Select picture"), 2);
+    }
 
-        String[] directories = null;
-        if (u != null) {
-            c = managedQuery(u, projection, null, null, null);
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            String[] filePathImage = {MediaStore.Images.Media.DATA};
+            String[] filePathVideo = {MediaStore.Video.Media.DATA};
+            mArrayUri = new ArrayList();
+            Cursor cursor;
+            if (resultCode == RESULT_OK) {
+                switch (requestCode) {
+                    case 1:
+                        mArrayUri = null;
+                        videoUri = data.getData();
 
-        if ((c != null) && (c.moveToFirst())) {
-            do {
-                String tempDir = c.getString(0);
-
-                tempDir = tempDir.substring(0, tempDir.lastIndexOf("/"));
-
-                try {
-                    dirList.add(tempDir);
-                } catch (Exception e) {
-
+                        cursor = getContentResolver().query(videoUri,
+                                filePathVideo, null, null, null);
+                        cursor.moveToFirst();
+                        cursor.close();
+                        Glide.with(PostTweetActivity.this)
+                                .load(videoUri)
+                                .placeholder(this.getDrawable(R.drawable.image))
+                                .into(statusBinding.videoThumbnail);
+                        statusBinding.rvImage.setVisibility(View.GONE);
+                        statusBinding.videoThumbnail.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        videoUri = null;
+                        // Get the Image from data
+                        if (data.getData() != null) {
+                            Uri mImageUri = data.getData();
+                            mArrayUri.add(mImageUri);
+                            // Get the cursor
+                            cursor = getContentResolver().query(mImageUri,
+                                    filePathImage, null, null, null);
+                            // Move to first row
+                            cursor.moveToFirst();
+                            cursor.close();
+                        } else {
+                            if (data.getClipData() != null) {
+                                ClipData mClipData = data.getClipData();
+                                for (int i = 0; i < mClipData.getItemCount(); i++) {
+                                    ClipData.Item item = mClipData.getItemAt(i);
+                                    Uri uri = item.getUri();
+                                    mArrayUri.add(uri);
+                                    // Get the cursor
+                                    cursor = getContentResolver().query(uri, filePathImage, null, null, null);
+                                    // Move to first row
+                                    cursor.moveToFirst();
+                                    cursor.close();
+                                }
+                            }
+                        }
+                        UploadAdapter uploadAdapter = new UploadAdapter(PostTweetActivity.this, mArrayUri);
+                        statusBinding.rvImage.setAdapter(uploadAdapter);
+                        statusBinding.rvImage.setLayoutManager(new LinearLayoutManager(PostTweetActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                        statusBinding.rvImage.setVisibility(View.VISIBLE);
+                        statusBinding.videoThumbnail.setVisibility(View.GONE);
+                        break;
                 }
             }
-            while (c.moveToNext());
-            directories = new String[dirList.size()];
-            dirList.toArray(directories);
-
+        } catch (Exception e) {
+            Log.e(TAG, "onActivityResult: load image and video" + e.getMessage() );
         }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-        for (int i = 0; i < dirList.size(); i++) {
-            File imageDir = new File(directories[i]);
-            File[] imageList = imageDir.listFiles();
-            if (imageList == null)
-                continue;
-            for (File imagePath : imageList) {
-                try {
-
-                    if (imagePath.isDirectory()) {
-                        imageList = imagePath.listFiles();
-
-                    }
-                    if (imagePath.getName().contains(".jpg") || imagePath.getName().contains(".JPG")
-                            || imagePath.getName().contains(".jpeg") || imagePath.getName().contains(".JPEG")
-                            || imagePath.getName().contains(".png") || imagePath.getName().contains(".PNG")
-                            || imagePath.getName().contains(".gif") || imagePath.getName().contains(".GIF")
-                            || imagePath.getName().contains(".bmp") || imagePath.getName().contains(".BMP")
-                    ) {
-                        String path = imagePath.getAbsolutePath();
-                        resultIAV.add(new Image(path));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+    public void upload(File file) {
+        MediaType MEDIA_TYPE = MediaType.parse("video/mp4");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE, file);
+        DataClient client = APIUtils.getDataClient();
+        client.uploadVideo(requestBody).enqueue(new Callback<UploadVideoResponse>() {
+            @Override
+            public void onResponse(Call<UploadVideoResponse> call, Response<UploadVideoResponse> response) {
+                if (response.isSuccessful()) {
+                    UploadVideoResponse rb = response.body();
+                } else {
+                    Log.i("mok", "F");
                 }
             }
-        }
-        return resultIAV;
+            @Override
+            public void onFailure(Call<UploadVideoResponse> call, Throwable t) {
+                t.printStackTrace();
+                Log.i("mok", t.getCause() + "");
+                Log.i("mok", "T");
+                finish();
+            }
+        });
     }
 
     private void postNew() {
@@ -266,48 +268,5 @@ public class PostTweetActivity extends AppCompatActivity implements SurfaceHolde
                 }
             }));
         }
-    }
-
-    private String getTags() {
-        String result = "";
-        if (statusBinding.rice.isChecked()) {
-            result += "#luagao ";
-        }
-        if (statusBinding.vegetable.isChecked()) {
-            result += "#hoamau ";
-        }
-        if (statusBinding.fruits.isChecked()) {
-            result += "#traicay ";
-        }
-        if (statusBinding.phanBon.isChecked()) {
-            result += "#phanbon ";
-        }
-        if (statusBinding.thuocTruSau.isChecked()) {
-            result += "#thuoctrusau ";
-        }
-        return result;
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String convertMillisecondToTime(long duration) {
-        long seconds = (duration / 1000) % 60;
-        long minutes = ((duration / (1000 * 60)) % 60);
-
-        return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    @Override
-    public void surfaceCreated(@NonNull SurfaceHolder holder) {
-
-    }
-
-    @Override
-    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-
     }
 }

@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <data>
+        <variable
+            name="name"
+            type="String" />
+    </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/background"
         tools:context=".MainActivity">
 
         <Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#4CAF50">
+            android:background="#E4016873">
 
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:text="Xin chào:  ĐỖ Hữu Thiện"
+                android:text="@{name}"
                 android:textColor="@color/white" />
-
             <TextView
                 android:id="@+id/logout"
                 android:layout_width="wrap_content"
@@ -33,12 +36,20 @@
                 android:text="Đăng xuất"
                 android:textColor="@color/white" />
         </Toolbar>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chào mừng đến với Ứng dụng"
+            android:gravity="center"
+            android:textColor="#FF0000"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="40dp"
             android:orientation="vertical"
             android:weightSum="2">
 
@@ -73,6 +84,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="10dp"
                         android:lines="2"
+                        android:textSize="15sp"
                         android:text="Bảng giá cả nông sản"
                         android:textColor="@color/black" />
                 </RelativeLayout>
@@ -100,6 +112,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="10dp"
                         android:lines="2"
+                        android:textSize="15sp"
                         android:text="Chia sẽ kinh nghiệm"
                         android:textColor="@color/black" />
                 </RelativeLayout>
@@ -110,8 +123,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout

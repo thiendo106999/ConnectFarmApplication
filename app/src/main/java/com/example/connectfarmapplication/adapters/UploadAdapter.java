@@ -1,6 +1,10 @@
 package com.example.connectfarmapplication.adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +24,7 @@ import java.util.ArrayList;
 public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<Image> listImage;
-    private int key;
+    private ArrayList<Uri> listImage;
 
     private static OnItemClickListener listener;
 
@@ -29,10 +32,10 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
         void onItemClick(View itemView, int position);
     }
 
-    public UploadAdapter(Context context, ArrayList<Image> listImage, int key) {
+    public UploadAdapter(Context context, ArrayList<Uri> listImage) {
         this.context = context;
         this.listImage = listImage;
-        this.key = key;
+
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -43,14 +46,14 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
     @NonNull
     @Override
     public UploadAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_upload, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UploadAdapter.ViewHolder holder, int position) {
         Glide.with(context)
-                .load(listImage.get(position).getImage())
+                .load(listImage.get(position))
                 .into(holder.image);
     }
 
@@ -61,42 +64,10 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView image, chosen;
-        CardView cardView;
-
+        ImageView image;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.imageItem2);
-            cardView = itemView.findViewById(R.id.card);
-            chosen = itemView.findViewById(R.id.chosen);
-            if (key == 1) {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (listener != null) {
-                            listener.onItemClick(itemView, getLayoutPosition());
-                        } else {
-                            boolean isCheck = listImage.get(getLayoutPosition()).isChosen();
-
-                            if (isCheck) {
-                                listImage.get(getLayoutPosition()).setChosen(!isCheck);
-                                cardView.getLayoutParams().width = (int) Utils.pxFromDp(context, 100);
-                                cardView.getLayoutParams().height = (int) Utils.pxFromDp(context, 100);
-                                chosen.setVisibility(View.GONE);
-                            } else {
-                                listImage.get(getLayoutPosition()).setChosen(!isCheck);
-                                cardView.getLayoutParams().width = (int) Utils.pxFromDp(context, 80);
-                                cardView.getLayoutParams().height = (int) Utils.pxFromDp(context, 80);
-                                chosen.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                });
-            } else {
-                cardView.getLayoutParams().width = (int) Utils.pxFromDp(context, 140);
-                cardView.getLayoutParams().height = (int) Utils.pxFromDp(context, 140);
-                image.setScaleType(ImageView.ScaleType.CENTER);
-            }
+            image = itemView.findViewById(R.id.image);
         }
     }
 

@@ -101,6 +101,11 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
         public MyViewHolder(@NonNull ItemArticleBinding articleBinding) {
             super(articleBinding.getRoot());
             this.articleBinding = articleBinding;
+
+            articleBinding.btnPlay.setOnClickListener(v -> {
+                player.play();
+                articleBinding.btnPlay.setVisibility(View.GONE);
+            });
         }
     }
     private void getUser(String token, MyViewHolder holder) {

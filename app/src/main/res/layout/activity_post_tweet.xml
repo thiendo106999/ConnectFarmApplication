@@ -11,133 +11,6 @@
         android:orientation="vertical"
         tools:context=".ui.PostTweetActivity">
 
-        <RelativeLayout
-            android:id="@+id/choose_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/linear"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/iv_back_image"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_baseline_arrow_back_24" />
-
-                    <TextView
-                        android:id="@+id/tv_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center"
-                        android:layout_toEndOf="@id/iv_back_image"
-                        android:text="Chọn hình ảnh"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/bt_choose"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="20dp"
-                        android:backgroundTint="@android:color/transparent"
-                        android:clickable="true"
-                        android:text="Chọn"
-                        android:textColor="@color/purple_200"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_list_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/linear" />
-
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/choose_video"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/linear_video"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <ImageView
-                        android:id="@+id/iv_back_video"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_baseline_arrow_back_24" />
-
-                    <TextView
-                        android:id="@+id/tv_video"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center"
-                        android:layout_toEndOf="@id/iv_back_video"
-                        android:text="Chọn video"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/bt_choose_video"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="20dp"
-                        android:backgroundTint="@android:color/transparent"
-                        android:clickable="true"
-                        android:text="Chọn"
-                        android:textColor="@color/purple_200"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_list_video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/linear_video" />
-
-        </RelativeLayout>
         <Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -231,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <CheckBox
                 android:id="@+id/phan_bon"
@@ -247,7 +120,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/checkbox"
-                android:text="Thuốc trừ sâu " />
+                android:text="Thuốc trừ sâu" />
+            <CheckBox
+                android:id="@+id/nong_cu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/checkbox"
+                android:text="Nông cụ" />
         </LinearLayout>
 
         <EditText
@@ -265,21 +145,27 @@
             android:hint="Nội dung"
             android:textSize="20sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="horizontal"
-            android:visibility="gone"/>
-        <ImageView
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_gravity="center"
-            android:visibility="visible"
-            android:id="@+id/video_thumbnail"/>
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/video_thumbnail"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btnLoadAnh"
@@ -301,6 +187,7 @@
             android:backgroundTint="@color/button_login"
             android:drawableStart="@drawable/ic_image"
             android:gravity="fill"
+            android:layout_gravity="bottom"
             android:layout_marginBottom="20dp"
             android:text="Chọn Video"
             android:textColor="@color/white" />
