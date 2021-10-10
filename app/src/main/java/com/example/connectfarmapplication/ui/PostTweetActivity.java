@@ -3,13 +3,11 @@ package com.example.connectfarmapplication.ui;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -21,18 +19,17 @@ import com.example.connectfarmapplication.adapters.UploadAdapter;
 import com.example.connectfarmapplication.databinding.ActivityPostTweetBinding;
 import com.example.connectfarmapplication.models.Image;
 import com.example.connectfarmapplication.models.New;
-import com.example.connectfarmapplication.models.UploadVideoResponse;
+import com.example.connectfarmapplication.models.UploadResponse;
 import com.example.connectfarmapplication.models.Video;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
+import com.example.connectfarmapplication.utils.RealPathUtil;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -40,23 +37,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class PostTweetActivity extends AppCompatActivity {
 
 
     private ActivityPostTweetBinding statusBinding;
-    private ArrayList<Image>  listImage;
-    private Video video;
     private final String TAG = "Post tweet activity";
-    private static int RESULT_LOAD_VIDEO = 1;
-    private static int RESULT_LOAD_IMAGE = 2;
-    ArrayList<Uri> mArrayUri;
-    Uri videoUri;
-
-
+    private final static int RESULT_LOAD_VIDEO = 1;
+    private final static int RESULT_LOAD_IMAGE = 2;
+    private ArrayList<Uri> mArrayUri;
+    private Uri videoUri;
+    private DataClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +72,16 @@ public class PostTweetActivity extends AppCompatActivity {
         statusBinding.layout.setOnClickListener(v -> Utils.hideSoftKeyboard(PostTweetActivity.this));
 
         statusBinding.btnDangBai.setOnClickListener(v -> {
-           // postNew();
+            postArticle();
             if (videoUri != null) {
-                upload(new File(videoUri.getPath()));
-
+                uploadFile(new File(RealPathUtil.getPath(this, videoUri)));
             }
-          //  finish();
+            if (mArrayUri != null && mArrayUri.size() > 0) {
+                for (Uri uri : mArrayUri) {
+                    uploadFile(new File(RealPathUtil.getPath(this, uri)));
+                }
+            }
+            finish();
         });
 
         statusBinding.btnLoadAnh.setOnClickListener(v -> {
@@ -89,9 +91,6 @@ public class PostTweetActivity extends AppCompatActivity {
             loadVideoFromGallery(statusBinding.btnLoadVideo);
         });
     }
-
-
-
 
     private String getTags() {
         String result = "";
@@ -132,20 +131,11 @@ public class PostTweetActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            String[] filePathImage = {MediaStore.Images.Media.DATA};
-            String[] filePathVideo = {MediaStore.Video.Media.DATA};
-            mArrayUri = new ArrayList();
-            Cursor cursor;
             if (resultCode == RESULT_OK) {
                 switch (requestCode) {
                     case 1:
                         mArrayUri = null;
                         videoUri = data.getData();
-
-                        cursor = getContentResolver().query(videoUri,
-                                filePathVideo, null, null, null);
-                        cursor.moveToFirst();
-                        cursor.close();
                         Glide.with(PostTweetActivity.this)
                                 .load(videoUri)
                                 .placeholder(this.getDrawable(R.drawable.image))
@@ -155,16 +145,11 @@ public class PostTweetActivity extends AppCompatActivity {
                         break;
                     case 2:
                         videoUri = null;
+                        mArrayUri = new ArrayList<>();
                         // Get the Image from data
                         if (data.getData() != null) {
                             Uri mImageUri = data.getData();
                             mArrayUri.add(mImageUri);
-                            // Get the cursor
-                            cursor = getContentResolver().query(mImageUri,
-                                    filePathImage, null, null, null);
-                            // Move to first row
-                            cursor.moveToFirst();
-                            cursor.close();
                         } else {
                             if (data.getClipData() != null) {
                                 ClipData mClipData = data.getClipData();
@@ -172,11 +157,6 @@ public class PostTweetActivity extends AppCompatActivity {
                                     ClipData.Item item = mClipData.getItemAt(i);
                                     Uri uri = item.getUri();
                                     mArrayUri.add(uri);
-                                    // Get the cursor
-                                    cursor = getContentResolver().query(uri, filePathImage, null, null, null);
-                                    // Move to first row
-                                    cursor.moveToFirst();
-                                    cursor.close();
                                 }
                             }
                         }
@@ -189,84 +169,102 @@ public class PostTweetActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "onActivityResult: load image and video" + e.getMessage() );
+            Log.e(TAG, "onActivityResult: load image and video" + e.getMessage());
         }
+
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void upload(File file) {
-        MediaType MEDIA_TYPE = MediaType.parse("video/mp4");
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE, file);
+    public void uploadFile(File file) {
+        // Parsing any Media type file
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody article_id = RequestBody.create(MediaType.parse("text/plain"), "1");
+
         DataClient client = APIUtils.getDataClient();
-        client.uploadVideo(requestBody).enqueue(new Callback<UploadVideoResponse>() {
+        client.uploadImage(fileToUpload, filename, article_id).enqueue(new Callback<UploadResponse>() {
             @Override
-            public void onResponse(Call<UploadVideoResponse> call, Response<UploadVideoResponse> response) {
-                if (response.isSuccessful()) {
-                    UploadVideoResponse rb = response.body();
-                } else {
-                    Log.i("mok", "F");
-                }
+            public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+                Log.e(TAG, "onResponse: " + response.body());
             }
+
             @Override
-            public void onFailure(Call<UploadVideoResponse> call, Throwable t) {
-                t.printStackTrace();
-                Log.i("mok", t.getCause() + "");
-                Log.i("mok", "T");
-                finish();
+            public void onFailure(Call<UploadResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
 
-    private void postNew() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("News");
+    public void postArticle() {
+        client = APIUtils.getDataClient();
         SharedPreferences preferences = getSharedPreferences("login", MODE_PRIVATE);
-
-        HashMap<String, String> temp = new HashMap<>();
-        SimpleDateFormat sf = new SimpleDateFormat("hh:mm dd-MM-yyyy");
-        SimpleDateFormat sf1 = new SimpleDateFormat("dd-MM-yyyy");
-        String date = sf.format(Calendar.getInstance().getTime());
-        // String key_date = sf1.format(Calendar.getInstance().getTime());
-
-        long miliseconds = Calendar.getInstance().getTimeInMillis();
-        String uid = preferences.getString("token", "");
-        String id_new = uid + miliseconds;
-        String content = statusBinding.edtContent.getText().toString();
-
-        New aNew = new New(id_new, content, "100", uid,
-                listImage, "#heee", date);
-        temp.put("id", id_new);
-        temp.put("content", aNew.getContent());
-        temp.put("likes", aNew.getLikes() + "");
-        temp.put("user_id", aNew.getUser_id());
-        temp.put("tag", getTags());
-        temp.put("time", aNew.getTime());
-
-        databaseReference.child(id_new).setValue(temp);
-
-        //upload image or video
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference;
-        if (listImage != null && listImage.size() > 0) {
-            storageReference = storage.getReference("UploadImage");
-            for (Image image : listImage) {
-                Uri file = Uri.fromFile(new File(image.getImage()));
-                storageReference.child(id_new).child(file.getLastPathSegment()).
-                        putFile(file).addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        databaseReference.child(id_new).child("list_image").push().setValue(uri.toString());
-                    }
-                }));
+        String token = preferences.getString("token", "");
+        String content = statusBinding.edtContent.getText().toString().trim();
+        String tags = getTags();
+        client.uploadArticle(token, content, tags).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.e(TAG, "onResponse: ," + response.body() );
             }
-        } else {
-            storageReference = storage.getReference("UploadVideo");
-            storageReference.child(id_new).child(video.getVideoUri().getLastPathSegment()).
-                    putFile(video.getVideoUri()).addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    databaseReference.child(id_new).child("video").push().setValue(uri.toString());
-                }
-            }));
-        }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
     }
+//    private void postNew() {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("News");
+//        SharedPreferences preferences = getSharedPreferences("login", MODE_PRIVATE);
+//
+//        HashMap<String, String> temp = new HashMap<>();
+//        SimpleDateFormat sf = new SimpleDateFormat("hh:mm dd-MM-yyyy");
+//        SimpleDateFormat sf1 = new SimpleDateFormat("dd-MM-yyyy");
+//        String date = sf.format(Calendar.getInstance().getTime());
+//        // String key_date = sf1.format(Calendar.getInstance().getTime());
+//
+//        long miliseconds = Calendar.getInstance().getTimeInMillis();
+//        String uid = preferences.getString("token", "");
+//        String id_new = uid + miliseconds;
+//        String content = statusBinding.edtContent.getText().toString();
+//
+//        New aNew = new New(id_new, content, "100", uid,
+//                listImage, "#heee", date);
+//        temp.put("id", id_new);
+//        temp.put("content", aNew.getContent());
+//        temp.put("likes", aNew.getLikes() + "");
+//        temp.put("user_id", aNew.getUser_id());
+//        temp.put("tag", getTags());
+//        temp.put("time", aNew.getTime());
+//
+//        databaseReference.child(id_new).setValue(temp);
+//
+//        //upload image or video
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageReference;
+//        if (listImage != null && listImage.size() > 0) {
+//            storageReference = storage.getReference("UploadImage");
+//            for (Image image : listImage) {
+//                Uri file = Uri.fromFile(new File(image.getImage()));
+//                storageReference.child(id_new).child(file.getLastPathSegment()).
+//                        putFile(file).addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        databaseReference.child(id_new).child("list_image").push().setValue(uri.toString());
+//                    }
+//                }));
+//            }
+//        } else {
+//            storageReference = storage.getReference("UploadVideo");
+//            storageReference.child(id_new).child(video.getVideoUri().getLastPathSegment()).
+//                    putFile(video.getVideoUri()).addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//                    databaseReference.child(id_new).child("video").push().setValue(uri.toString());
+//                }
+//            }));
+//        }
+//    }
 }

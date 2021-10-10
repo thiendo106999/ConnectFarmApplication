@@ -1,26 +1,23 @@
 package com.example.connectfarmapplication.retrofit;
 
 import com.example.connectfarmapplication.models.Article;
+import com.example.connectfarmapplication.models.UploadResponse;
 import com.example.connectfarmapplication.models.UploadVideoResponse;
-import com.example.connectfarmapplication.models.User;
 import com.example.connectfarmapplication.models.UserInfo;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
+import okhttp3.RequestBody;
 
 public interface DataClient {
     @GET("api/articles")
@@ -38,7 +35,11 @@ public interface DataClient {
     Call<String> checkNewUser(@Field("token") String token);
 
     @Multipart
-    @POST("api/upload_video")
-    Call<UploadVideoResponse> uploadVideo(@Part("video") RequestBody video);
+    @POST("api/upload_file")
+    Call<UploadResponse> uploadImage(@Part MultipartBody.Part file, @Part("file_name") RequestBody fileName, @Part("article_id") RequestBody article_id);
+
+    @FormUrlEncoded
+    @POST("api/upload_article")
+    Call<String> uploadArticle(@Header("access_token") String access_token ,@Field("content") String content, @Field("tags") String tags);
 
 }
