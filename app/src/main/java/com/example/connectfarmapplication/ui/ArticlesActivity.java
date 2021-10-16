@@ -38,7 +38,6 @@ public class ArticlesActivity extends AppCompatActivity {
         token = Utils.getToken(this);
 
         client = APIUtils.getDataClient();
-
         client.getArticles().enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {

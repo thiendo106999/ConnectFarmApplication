@@ -12,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ItemSellBinding;
 import com.example.connectfarmapplication.models.Product;
+import com.example.connectfarmapplication.models.ProductResponse;
 
 import java.util.ArrayList;
 
 public class SellAdapter extends RecyclerView.Adapter<SellAdapter.MyViewHolder>{
 
-    private ArrayList<Product> products;
+    private ArrayList<ProductResponse> products;
     private Context context;
 
-    public SellAdapter(ArrayList<Product> products, Context context){
+    public SellAdapter(ArrayList<ProductResponse> products, Context context){
         this.context = context;
         this.products = products;
     }

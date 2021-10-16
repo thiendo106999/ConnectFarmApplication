@@ -17,14 +17,13 @@ import java.util.HashMap;
 
 public class PriceAdapter extends RecyclerView.Adapter<PriceAdapter.MyViewHolder> {
 
-    private ArrayList<String> listPrice;
-    private ArrayList<String> listName;
+    private ArrayList<AgriculturalResponse> listPrice;
+
     private Context context;
 
-    public PriceAdapter(ArrayList<String> listPrice, ArrayList<String> listName ,Context context) {
+    public PriceAdapter( ArrayList<AgriculturalResponse> listPrice, Context context) {
         this.context = context;
         this.listPrice = listPrice;
-        this.listName = listName;
     }
 
     @NonNull
@@ -36,8 +35,8 @@ public class PriceAdapter extends RecyclerView.Adapter<PriceAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.tvPrice.setText(listPrice.get(position));
-        holder.tvName.setText(listName.get(position));
+        holder.tvPrice.setText(listPrice.get(position).getPrice());
+        holder.tvName.setText(listPrice.get(position).getName());
     }
 
     @Override

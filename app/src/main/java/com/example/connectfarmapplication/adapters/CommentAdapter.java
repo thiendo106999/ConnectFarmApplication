@@ -12,6 +12,9 @@ import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ItemCommentBinding;
 import com.example.connectfarmapplication.models.Comment;
 import com.example.connectfarmapplication.models.User;
+import com.example.connectfarmapplication.models.UserInfo;
+import com.example.connectfarmapplication.retrofit.APIUtils;
+import com.example.connectfarmapplication.retrofit.DataClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +23,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHolder>{
     Context context;
@@ -49,20 +56,39 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
     private void setAvatarAndNickName(MyViewHolder holder, String token){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(token);
 
-        reference.addValueEventListener(new ValueEventListener() {
+        DataClient client = APIUtils.getDataClient();
+        client.getUserInfo(token).enqueue(new Callback<UserInfo>() {
             @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if (response.isSuccessful()) {
+                    UserInfo userInfo = response.body();
 
-                holder.itemCommentBinding.setUser(user);
+                    holder.itemCommentBinding.setUser(userInfo);
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+            public void onFailure(Call<UserInfo> call, Throwable t) {
 
             }
         });
+
+
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+//                User user = snapshot.getValue(User.class);
+//
+//                holder.itemCommentBinding.setUser(user);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+//
+//            }
+//        });
     }
+
 
     @Override
     public int getItemCount() {

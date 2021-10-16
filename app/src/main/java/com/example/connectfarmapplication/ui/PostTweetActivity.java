@@ -3,11 +3,11 @@ package com.example.connectfarmapplication.ui;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -17,25 +17,15 @@ import com.bumptech.glide.Glide;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.adapters.UploadAdapter;
 import com.example.connectfarmapplication.databinding.ActivityPostTweetBinding;
-import com.example.connectfarmapplication.models.Image;
-import com.example.connectfarmapplication.models.New;
+import com.example.connectfarmapplication.models.CreateArticleResponse;
 import com.example.connectfarmapplication.models.UploadResponse;
-import com.example.connectfarmapplication.models.Video;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.RealPathUtil;
 import com.example.connectfarmapplication.utils.Utils;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -72,16 +62,12 @@ public class PostTweetActivity extends AppCompatActivity {
         statusBinding.layout.setOnClickListener(v -> Utils.hideSoftKeyboard(PostTweetActivity.this));
 
         statusBinding.btnDangBai.setOnClickListener(v -> {
-            postArticle();
-            if (videoUri != null) {
-                uploadFile(new File(RealPathUtil.getPath(this, videoUri)));
+            if (getTags().length() == 0) {
+                Toast.makeText(PostTweetActivity.this, "Trường chủ đề không được bỏ trống", Toast.LENGTH_SHORT).show();
+            } else {
+                postArticle();
+                finish();
             }
-            if (mArrayUri != null && mArrayUri.size() > 0) {
-                for (Uri uri : mArrayUri) {
-                    uploadFile(new File(RealPathUtil.getPath(this, uri)));
-                }
-            }
-            finish();
         });
 
         statusBinding.btnLoadAnh.setOnClickListener(v -> {
@@ -176,23 +162,24 @@ public class PostTweetActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void uploadFile(File file) {
+    public void uploadFile(File file, String articleId) {
         // Parsing any Media type file
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-        RequestBody article_id = RequestBody.create(MediaType.parse("text/plain"), "1");
+        RequestBody article_id = RequestBody.create(MediaType.parse("text/plain"), articleId);
 
         DataClient client = APIUtils.getDataClient();
         client.uploadImage(fileToUpload, filename, article_id).enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
-                Log.e(TAG, "onResponse: " + response.body());
+                UploadResponse message = response.body();
+                Log.e(TAG, "onResponse: " + message.getMessage());
             }
 
             @Override
             public void onFailure(Call<UploadResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
+                Log.e(TAG, "onFailure: upload" + t.getMessage());
             }
         });
     }
@@ -203,15 +190,25 @@ public class PostTweetActivity extends AppCompatActivity {
         String token = preferences.getString("token", "");
         String content = statusBinding.edtContent.getText().toString().trim();
         String tags = getTags();
-        client.uploadArticle(token, content, tags).enqueue(new Callback<String>() {
+        client.uploadArticle(token, content, tags).enqueue(new Callback<CreateArticleResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.e(TAG, "onResponse: ," + response.body() );
+            public void onResponse(Call<CreateArticleResponse> call, Response<CreateArticleResponse> response) {
+                if (response.isSuccessful()) {
+                    CreateArticleResponse body = response.body();
+                    if (videoUri != null) {
+                        uploadFile(new File(RealPathUtil.getPath(PostTweetActivity.this, videoUri)), body.getArticle_id());
+                    }
+                    if (mArrayUri != null && mArrayUri.size() > 0) {
+                        for (Uri uri : mArrayUri) {
+                            uploadFile(new File(RealPathUtil.getPath(PostTweetActivity.this, uri)), body.getArticle_id());
+                        }
+                    }
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage() );
+            public void onFailure(Call<CreateArticleResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }

@@ -5,43 +5,65 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.connectfarmapplication.R;
+import com.example.connectfarmapplication.adapters.AgriculturalResponse;
 import com.example.connectfarmapplication.adapters.PriceAdapter;
 import com.example.connectfarmapplication.databinding.ActivityPriceListBinding;
+import com.example.connectfarmapplication.models.DateAndProvinceResponse;
+import com.example.connectfarmapplication.retrofit.APIUtils;
+import com.example.connectfarmapplication.retrofit.DataClient;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PriceListActivity extends BaseActivity {
-    ActivityPriceListBinding binding;
-    ArrayAdapter<String> arrayAdapter;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ActivityPriceListBinding binding;
+    private ArrayAdapter<String> arrayAdapter;
+    protected FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final String TAG = "PriceListActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(PriceListActivity.this, R.layout.activity_price_list);
 
-        getProvinces();
-         getDate();
-
-
-        binding.back.setOnClickListener(v->{
+        getDatesAndProvinces();
+        binding.back.setOnClickListener(v -> {
             finish();
         });
         binding.search.setOnClickListener(v -> {
             String date = binding.date.getSelectedItem().toString();
             String kind = getKind();
-            getResult(date, kind, "An Giang");
+
+            DataClient client = APIUtils.getDataClient();
+            client.getPriceAgricultural(date, kind).enqueue(new Callback<ArrayList<AgriculturalResponse>>() {
+                @Override
+                public void onResponse(Call<ArrayList<AgriculturalResponse>> call, Response<ArrayList<AgriculturalResponse>> response) {
+                    ArrayList<AgriculturalResponse> list = new ArrayList<>();
+                    if (response.isSuccessful()) {
+                        list = response.body();
+                    }
+                    PriceAdapter adapter = new PriceAdapter(list, PriceListActivity.this);
+                    LinearLayoutManager manager = new LinearLayoutManager(PriceListActivity.this);
+                    binding.listPrice.setAdapter(adapter);
+                    binding.listPrice.setLayoutManager(manager);
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<AgriculturalResponse>> call, Throwable t) {
+
+                }
+            });
+            // getResult(date, kind, "An Giang");
         });
 
         binding.showFilter.setOnClickListener(v->{
@@ -49,128 +71,37 @@ public class PriceListActivity extends BaseActivity {
         });
     }
 
-    private String getKind(){
+    private String getKind() {
         String result = "";
-        if(binding.rice.isChecked())
-            result = "Lúa Gạo";
-        else if(binding.vegetable.isChecked())
-            result = "Hoa màu";
-        else if(binding.fruit.isChecked())
-            result = "Trái Cây";
+        if (binding.rice.isChecked())
+            result = "luagao";
+        else if (binding.vegetable.isChecked())
+            result = "hoamau";
+        else if (binding.fruit.isChecked())
+            result = "traicay";
         return result;
     }
-    private void getDate() {
-        ArrayList<String> dates = new ArrayList<>();
-        db.collection("date").get()
-                .addOnCompleteListener(task -> {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        dates.add(document.getString("date"));
-                    }
-                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, R.layout.spinner_text, dates);
-                    binding.date.setAdapter(arrayAdapter);
-                });
-    }
-    private ArrayList<String> getProvinces() {
-        ArrayList<String> provinces = new ArrayList<>();
-        db.collection("provinces").get()
-                .addOnCompleteListener(task -> {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        provinces.add(document.getString("name"));
-                    }
-                    arrayAdapter = new ArrayAdapter<String>(PriceListActivity.this, R.layout.spinner_text, provinces);
-                    binding.province.setAdapter(arrayAdapter);
-                    binding.province.setSelection(0);
-                });
 
-        return provinces;
-    }
+    private void getDatesAndProvinces() {
+        DataClient client = APIUtils.getDataClient();
+        client.getDatesAndProvinces().enqueue(new Callback<DateAndProvinceResponse>() {
+            @Override
+            public void onResponse(Call<DateAndProvinceResponse> call, Response<DateAndProvinceResponse> response) {
+                DateAndProvinceResponse data = new DateAndProvinceResponse();
+                if (response.isSuccessful()) {
+                    data = response.body();
+                    Log.e("TAG", "onResponse: " + data.toString());
+                }
+                arrayAdapter = new ArrayAdapter(PriceListActivity.this, R.layout.spinner_text, data.getDates());
+                binding.date.setAdapter(arrayAdapter);
+                arrayAdapter = new ArrayAdapter(PriceListActivity.this, R.layout.spinner_text, data.getProvinces());
+                binding.province.setAdapter(arrayAdapter);
+            }
 
-    private void getResult(String date, String kind, String province) {
-        ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> prices = new ArrayList<>();
-
-        db.collection("prices")
-                .get()
-                .addOnCompleteListener(task -> {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (Objects.equals(document.getString("date"), date)
-                                && Objects.equals(document.getString("agricultural_id"), kind)) {
-                            names.add(document.getString("name") );
-                            prices.add(document.getString("price"));
-                        }
-                    }
-                    PriceAdapter adapter = new PriceAdapter(prices, names, PriceListActivity.this);
-                    LinearLayoutManager manager = new LinearLayoutManager(PriceListActivity.this);
-                    binding.listPrice.setAdapter(adapter);
-                    binding.listPrice.setLayoutManager(manager);
-
-                });
-    }
-
-    private void addData() {
-        String date = "19-9-2021";
-        Map<String, Object> data = new HashMap<>();
-        data.put("agricultural_id", "Lúa Gạo");
-        data.put("date", date);
-        data.put("name", "Lúa OM 9577");
-        data.put("price", "6.100 đ/kg");
-        data.put("province", "An Giang");
-        db.collection("prices").add(data);
-
-        data.clear();
-        data.put("agricultural_id", "Lúa Gạo");
-        data.put("date", date);
-        data.put("name", "Lúa OM 9577");
-        data.put("price", "6.100 đ/kg");
-        data.put("province", "An Giang");
-        db.collection("prices").add(data);
-
-
-        data.clear();
-        data.put("agricultural_id", "Trái Cây");
-        data.put("date", date);
-        data.put("name", "Giá sầu riêng Ri6");
-        data.put("price", "80.000 đ/kg");
-        data.put("province", "Miền Tây");
-        db.collection("prices").add(data);
-
-        data.clear();
-        data.put("agricultural_id", "Trái Cây");
-        data.put("date", date);
-        data.put("name", "Chôm chôm Thái");
-        data.put("price", "40.000 – 45.000 đồng/kg");
-        data.put("province", "Miền Tây");
-        db.collection("prices").add(data);
-
-        data.clear();
-        data.put("agricultural_id", "Trái Cây");
-        data.put("date", date);
-        data.put("name", "Mít");
-        data.put("price", "16000 đồng/kg");
-        data.put("province", "Miền Tây");
-        db.collection("prices").add(data);
-
-        data.clear();
-        data.put("agricultural_id", "Hoa màu");
-        data.put("date", date);
-        data.put("name", "Cải xanh");
-        data.put("price", "16000 đồng/kg");
-        data.put("province", "Miền Tây");
-        db.collection("prices").add(data);
-        data.clear();
-        data.put("agricultural_id", "Hoa màu");
-        data.put("date", date);
-        data.put("name", "Hành lá");
-        data.put("price", "50000 đ/kg");
-        data.put("province", "Miền Tây");
-        db.collection("prices").add(data);
-        data.clear();
-
-        data.put("agricultural_id", "Hoa màu");
-        data.put("date", date);
-        data.put("name", "Rau muống");
-        data.put("price", "16000 đồng/kg");
-        data.put("province", "Miền Tây");
-        db.collection("prices").add(data);
+            @Override
+            public void onFailure(Call<DateAndProvinceResponse> call, Throwable t) {
+                Log.e(TAG, "Get Date and Province: onFailure: " + t.getMessage());
+            }
+        });
     }
 }

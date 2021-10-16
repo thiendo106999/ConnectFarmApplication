@@ -1,32 +1,25 @@
 package com.example.connectfarmapplication.adapters;
 
-import static android.content.ContentValues.TAG;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ItemArticleBinding;
-import com.example.connectfarmapplication.databinding.ItemNewBinding;
 import com.example.connectfarmapplication.models.Article;
 import com.example.connectfarmapplication.models.Comment;
 import com.example.connectfarmapplication.models.Image;
-import com.example.connectfarmapplication.models.New;
-import com.example.connectfarmapplication.models.User;
+import com.example.connectfarmapplication.models.UserInfo;
+import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.android.exoplayer2.MediaItem;
@@ -38,15 +31,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyViewHolder>{
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<Article> articles;
     private ItemArticleBinding articleBinding;
     private DatabaseReference databaseReference;
     private SimpleExoPlayer player;
+    private CommentAdapter commentAdapter;
+    private boolean click = false;
 
     public ArticlesAdapter(Context context, ArrayList<Article> list) {
         this.context = context;
@@ -62,7 +60,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String token = "8u0JceVLiCQfW6rpd6rJwvBs5RH2";
+        String token = "mciYBoSReiTsoTMmZCrAup9U5Ym1";
         getUser(token, holder);
         holder.articleBinding.setArticle(articles.get(position));
 
@@ -71,11 +69,13 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
             holder.articleBinding.rcvListImage.setVisibility(View.VISIBLE);
             holder.articleBinding.videoLayout.setVisibility(View.GONE);
         }
-        if (articles.get(position).getVideo() != null){
+        if (articles.get(position).getVideo() != null) {
             loadVideo(position, holder);
             holder.articleBinding.rcvListImage.setVisibility(View.GONE);
             holder.articleBinding.videoLayout.setVisibility(View.VISIBLE);
         }
+
+        getListComment(articles.get(position).getId(), holder);
 
     }
 
@@ -83,14 +83,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
         player = new SimpleExoPlayer.Builder(context).build();
         holder.articleBinding.videoPlayer.setPlayer(player);
         // Build the media item.
-        MediaItem mediaItem = MediaItem.fromUri(Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+        String path = "http://192.168.1.7:8000/api/storage/" + articles.get(position).getVideo();
+        MediaItem mediaItem = MediaItem.fromUri(Uri.parse(path));
         // Set the media item to be played.
         player.setMediaItem(mediaItem);
         // Prepare the player.
         player.prepare();
         // Start the playback.
     }
-
     @Override
     public int getItemCount() {
         return articles == null ? 0 : articles.size();
@@ -106,33 +106,57 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                 player.play();
                 articleBinding.btnPlay.setVisibility(View.GONE);
             });
+
+            articleBinding.comment.setOnClickListener(v -> {
+                click = !click;
+                if (articleBinding.showComment.isShown()) {
+                    articleBinding.showComment.setVisibility(View.GONE);
+                } else {
+                    articleBinding.showComment.setVisibility(View.VISIBLE);
+                    articleBinding.edtComment.requestFocus();
+
+                }
+            });
+
+            articleBinding.imvComment.setOnClickListener(v -> {
+                String content = articleBinding.edtComment.getText().toString();
+
+                if ((!content.equals(""))) {
+                    databaseReference = FirebaseDatabase.getInstance().getReference("Comments");
+                    Comment comment = new Comment();
+                    comment.setContent(content);
+                    comment.setUser_id(Utils.getToken((Activity) context));
+
+                    databaseReference.child(articles.get(getLayoutPosition()).getId().toString()).push().setValue(comment);
+                    articleBinding.edtComment.setText("");
+                }
+            });
         }
     }
     private void getUser(String token, MyViewHolder holder) {
-        try {
-            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(token);
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                    User user = snapshot.getValue(User.class);
-                    holder.articleBinding.setUser(user);
+        DataClient client = APIUtils.getDataClient();
+        client.getUserInfo(token).enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if (response.isSuccessful()) {
+                    UserInfo userInfo = response.body();
+                    holder.articleBinding.setUser(userInfo);
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                }
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+
+            }
             });
-        } catch (Exception e) {
-        }
     }
 
     private void loadImages(int position, MyViewHolder holder){
         ArrayList<Image> listImage = new ArrayList<>();
         ArrayList<String> images = (ArrayList<String>) articles.get(position).getImages();
-        for (String image:images) {
+        for (String image : images) {
             listImage.add(new Image(image));
         }
-        Log.e(TAG, "loadImages: " + images.size() );
         ImageAdapter adapter = new ImageAdapter(context, listImage);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
         holder.articleBinding.rcvListImage.setLayoutManager(linearLayoutManager);
@@ -140,4 +164,35 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
         holder.articleBinding.videoLayout.setVisibility(View.GONE);
         holder.articleBinding.rcvListImage.setVisibility(View.VISIBLE);
     }
+
+    private void getListComment(int idNew, ArticlesAdapter.MyViewHolder holder) {
+        ArrayList<Comment> comments = new ArrayList<>();
+        try {
+            databaseReference = FirebaseDatabase.getInstance().getReference("Comments").child(idNew + "");
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    comments.clear();
+                    for (DataSnapshot s : snapshot.getChildren()
+                    ) {
+                        Comment comment = s.getValue(Comment.class);
+                        comments.add(comment);
+                    }
+                    commentAdapter = new CommentAdapter(context, comments);
+                    commentAdapter.notifyDataSetChanged();
+                    holder.articleBinding.rcrComment.setAdapter(commentAdapter);
+                    holder.articleBinding.rcrComment.setLayoutManager(new LinearLayoutManager(context));
+                    holder.articleBinding.rcrComment.setHasFixedSize(true);
+                    holder.articleBinding.rcrComment.setNestedScrollingEnabled(false);
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                    Log.e("TAG", "onCancelled: " + error.getMessage());
+                }
+            });
+        } catch (Exception e) {
+        }
+    }
+
 }

@@ -1,9 +1,15 @@
 package com.example.connectfarmapplication.retrofit;
 
+import com.example.connectfarmapplication.adapters.AgriculturalResponse;
 import com.example.connectfarmapplication.models.Article;
+import com.example.connectfarmapplication.models.CreateArticleResponse;
+import com.example.connectfarmapplication.models.DateAndProvinceResponse;
+import com.example.connectfarmapplication.models.ProductResponse;
 import com.example.connectfarmapplication.models.UploadResponse;
 import com.example.connectfarmapplication.models.UploadVideoResponse;
 import com.example.connectfarmapplication.models.UserInfo;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +46,18 @@ public interface DataClient {
 
     @FormUrlEncoded
     @POST("api/upload_article")
-    Call<String> uploadArticle(@Header("access_token") String access_token ,@Field("content") String content, @Field("tags") String tags);
+    Call<CreateArticleResponse> uploadArticle(@Header("access_token") String access_token , @Field("content") String content, @Field("tags") String tags);
 
+    @FormUrlEncoded
+    @POST("api/price_list")
+    Call<ArrayList<AgriculturalResponse>> getPriceAgricultural(@Field("date") String date, @Field("kind") String kind);
+
+    @POST("api/get_data_price_list")
+    Call<DateAndProvinceResponse> getDatesAndProvinces();
+    @GET("api/set_up_spinner_sell")
+    Call<DateAndProvinceResponse> setupSpinnerSell();
+
+    @FormUrlEncoded
+    @POST("api/products")
+    Call<ArrayList<ProductResponse>> getProducts(@Field("date") String date, @Field("kind_id") String kind, @Field("province") String province);
 }

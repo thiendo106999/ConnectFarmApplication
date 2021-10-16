@@ -3,7 +3,7 @@
     <data>
         <variable
             name="product"
-            type="com.example.connectfarmapplication.models.Product" />
+            type="com.example.connectfarmapplication.models.ProductResponse" />
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="@{product.userName}"/>
+                   android:text="@{product.user_name}"/>
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="@{product.phoneNumber}"/>
+                   android:text="@{product.phone_number}"/>
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"

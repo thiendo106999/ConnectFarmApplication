@@ -62,7 +62,6 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
         return listImage == null ? 0 : listImage.size();
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         public ViewHolder(@NonNull View itemView) {

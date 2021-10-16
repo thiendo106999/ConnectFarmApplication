@@ -2,6 +2,7 @@ package com.example.connectfarmapplication.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ImageAdapter.MyViewHolder holder, int position) {
+        String path = "http://192.168.1.7:8000/api/storage/" + listImage.get(position).getImage();
         Glide.with(context)
-                .load(listImage.get(position).getImage())
+                .load(Uri.parse(path))
                 .into(mBinding.image);
     }
 

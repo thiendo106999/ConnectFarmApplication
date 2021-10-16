@@ -42,9 +42,6 @@ public class PostActivity extends AppCompatActivity{
     private NewsAdapter adapter;
     private ArrayList<New> listNews;
     private String token;
-    private MediaPlayer mediaPlayer;
-    private SurfaceView surfaceView;
-    private SurfaceHolder surfaceHolder;
     DatabaseReference reference;
 
     @Override
@@ -59,7 +56,6 @@ public class PostActivity extends AppCompatActivity{
             getUser(token);
             listNews = getListNew();
         }
-
 
         postBinding.showTweetActivity.setOnClickListener(v -> {
             startActivity(new Intent(PostActivity.this, PostTweetActivity.class));
