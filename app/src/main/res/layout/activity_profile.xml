@@ -4,7 +4,7 @@
 <data>
     <variable
         name="user"
-        type="com.example.connectfarmapplication.models.User" />
+        type="com.example.connectfarmapplication.models.UserInfo" />
 </data>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,12 +13,11 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".ui.ProfileActivity">
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/background"
+        android:background="#E4016873"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
@@ -30,18 +29,20 @@
             android:layout_alignParentTop="true"
             android:layout_margin="5dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/back" />
+            android:src="@drawable/ic_back" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_margin="5dp"
-            android:text="User Information"
-            android:gravity="center"
-            android:textSize="20sp"
             android:background="@android:color/transparent"
-            android:src="@drawable/back" />
+            android:gravity="center"
+            android:src="@drawable/back"
+            android:text="Thông tin"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
 
@@ -54,6 +55,18 @@
         android:layout_marginTop="100dp"
         android:src="@drawable/bg_login" />
 
+    <ImageView
+        android:id="@+id/choose_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/avatar"
+        android:layout_marginStart="-40dp"
+        android:layout_marginTop="-30dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_add_picture" />
+
     <TextView
         android:id="@+id/tv_username"
         android:layout_width="wrap_content"
@@ -62,7 +75,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:maxLines="1"
-        android:text="@{user.full_name}"
+        android:text="@{user.name}"
+        android:textColor="@color/colorTextLogin"
         android:textSize="25sp" />
 
 
@@ -85,7 +99,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-
         android:background="@color/my_statusbar_color" />
 
     <TextView
@@ -96,6 +109,7 @@
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="10dp"
         android:maxLines="1"
+        android:text="@{user.year_of_birth}"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -117,6 +131,7 @@
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="10dp"
         android:maxLines="1"
+        android:text="@{user.address}"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -138,6 +153,7 @@
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="10dp"
         android:maxLines="1"
+        android:text="@{user.job}"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -158,12 +174,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/viewLine3_friend"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:paddingHorizontal="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/bt_login"
+        android:background="@drawable/custom_bt_login"
+        android:backgroundTint="@color/button_login"
+        android:paddingHorizontal="20dp"
         android:text="Chỉnh sửa"
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_send_request_make_friend"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_bt_login"
+        android:backgroundTint="@color/button_login"
+        android:paddingHorizontal="20dp"
+        android:text="Đăng xuất"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
 

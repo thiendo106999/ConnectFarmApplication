@@ -34,7 +34,7 @@ public class UserInfo {
     }
 
     public String getJob() {
-        return job;
+        return "Nghề nghiệp: " + job;
     }
 
     public void setJob(String job) {
@@ -42,7 +42,7 @@ public class UserInfo {
     }
 
     public String getAddress() {
-        return address;
+        return "Địa chỉ: " + address;
     }
 
     public void setAddress(String address) {
@@ -50,7 +50,7 @@ public class UserInfo {
     }
 
     public String getYear_of_birth() {
-        return year_of_birth;
+        return "Năm sinh: " + year_of_birth;
     }
 
     public void setYear_of_birth(String year_of_birth) {
@@ -66,7 +66,7 @@ public class UserInfo {
     }
 
     public String getAvatar() {
-        return avatar;
+        return "http://192.168.1.7:8000/api/storage/" + avatar;
     }
 
     public void setAvatar(String avatar) {

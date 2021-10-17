@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -50,10 +51,12 @@
             android:background="@color/silver" />
         <LinearLayout
             android:id="@+id/ln_filter"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible"
+            android:gravity="center"
+            android:layout_gravity="center">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,8 +78,14 @@
                     android:layout_marginStart="30dp"
                     android:textColor="@color/text_color_login"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
                     android:textAlignment="center" />
             </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,31 +110,39 @@
                         android:id="@+id/rice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/text_color_login"
                         android:checked="true"
-                        android:textColor="@color/text_color_login"
-                        android:text="Lúa gạo" />
+                        android:text="Lúa gạo"
+                        android:textColor="@color/text_color_login" />
 
                     <RadioButton
                         android:id="@+id/vegetable"
-                        android:textColor="@color/text_color_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hoa màu" />
+                        android:buttonTint="@color/text_color_login"
+                        android:text="Hoa màu"
+                        android:textColor="@color/text_color_login" />
 
                     <RadioButton
                         android:id="@+id/fruit"
-                        android:textColor="@color/text_color_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Trái cây" />
+                        android:buttonTint="@color/text_color_login"
+                        android:text="Trái cây"
+                        android:textColor="@color/text_color_login" />
                 </RadioGroup>
             </LinearLayout>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,7 +159,11 @@
                     android:textColor="@color/text_color_login"
                     android:textAlignment="center" />
             </LinearLayout>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
             <Button
                 android:id="@+id/search"
                 android:layout_width="match_parent"

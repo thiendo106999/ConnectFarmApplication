@@ -66,7 +66,6 @@ public class PostActivity extends AppCompatActivity{
         ArrayList<New> listNews = new ArrayList<>();
 
         reference = FirebaseDatabase.getInstance().getReference("News");
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

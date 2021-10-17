@@ -30,7 +30,7 @@ public interface DataClient {
     Call<List<Article>> getArticles();
 
     @FormUrlEncoded
-    @POST("api/get_use_info")
+    @POST("api/get_user_info")
     Call<UserInfo> getUserInfo(@Field("token") String token);
 
     @POST("api/create_user_info")
@@ -43,6 +43,11 @@ public interface DataClient {
     @Multipart
     @POST("api/upload_file")
     Call<UploadResponse> uploadImage(@Part MultipartBody.Part file, @Part("file_name") RequestBody fileName, @Part("article_id") RequestBody article_id);
+
+    @Multipart
+    @POST("api/upload_avatar")
+    Call<UploadResponse> uploadAvatar(@Part MultipartBody.Part file, @Part("file_name") RequestBody fileName, @Part("access_token") RequestBody token);
+
 
     @FormUrlEncoded
     @POST("api/upload_article")

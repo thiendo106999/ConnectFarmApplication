@@ -31,28 +31,38 @@
                    android:layout_height="wrap_content"
                    android:textSize="16sp"
                    android:textStyle="bold"
+                   android:textColor="@color/black"
                    android:text="@{product.name}"
                    />
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
+                   android:textColor="@color/black"
                    android:text="@{product.user_name}"/>
+
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="@{product.address}"/>
+                   android:text="@{product.address}"
+                   android:textColor="@color/black" />
+
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="@{product.phone_number}"/>
+                   android:text="@{product.phone_number}"
+                   android:textColor="@color/black" />
+
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="@{product.date}"/>
+                   android:text="@{product.date}"
+                   android:textColor="@color/black" />
+
                <TextView
                    android:layout_width="wrap_content"
+                   android:text="@{product.hexta}"
                    android:layout_height="wrap_content"
-                   android:text="@{product.hexta}"/>
+                   android:textColor="@color/black" />
 
            </LinearLayout>
        </LinearLayout>

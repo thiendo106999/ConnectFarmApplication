@@ -75,6 +75,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="25dp"
+                        android:buttonTint="@color/text_color_login"
                         android:popupBackground="@color/white"
                         android:shadowColor="@color/text_color_login" />
                 </LinearLayout>
@@ -110,6 +111,7 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:text="Lúa gạo"
+                            android:buttonTint="@color/text_color_login"
                             android:shadowColor="@color/text_color_login"
                             android:textColor="@color/text_color_login" />
 
@@ -118,6 +120,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Hoa màu"
+                            android:buttonTint="@color/text_color_login"
                             android:shadowColor="@color/text_color_login"
                             android:textColor="@color/text_color_login" />
 
@@ -126,6 +129,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Trái cây"
+                            android:buttonTint="@color/text_color_login"
                             android:shadowColor="@color/text_color_login"
                             android:textColor="@color/text_color_login" />
                     </RadioGroup>
@@ -157,10 +161,15 @@
                         android:layout_height="30dp"
                         android:layout_marginStart="65dp"
                         android:popupBackground="@color/white"
+                        android:buttonTint="@color/text_color_login"
                         android:drawableEnd="@drawable/ic_drop_down"
                         android:shadowColor="@color/text_color_login" />
                 </LinearLayout>
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/silver" />
                 <Button
                     android:id="@+id/search"
                     android:layout_width="match_parent"

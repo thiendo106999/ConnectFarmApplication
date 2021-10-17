@@ -24,8 +24,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ArticlesActivity extends AppCompatActivity {
-    ActivityArticlesBinding binding;
-    String token;
+    private ActivityArticlesBinding binding;
+    private String token;
     private ArrayList<Article> articleList;
     private ArticlesAdapter adapter;
     DataClient client;
@@ -63,5 +63,7 @@ public class ArticlesActivity extends AppCompatActivity {
         binding.showTweetActivity.setOnClickListener(v -> {
             startActivity(new Intent(ArticlesActivity.this, PostTweetActivity.class));
         });
+
+        binding.back.setOnClickListener(v -> finish());
     }
 }

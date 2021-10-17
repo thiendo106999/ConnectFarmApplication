@@ -48,21 +48,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull @NotNull CommentAdapter.MyViewHolder holder, int position) {
         holder.itemCommentBinding.setComment(list.get(position));
-
         setAvatarAndNickName(holder, list.get(position).getUser_id());
-
     }
 
     private void setAvatarAndNickName(MyViewHolder holder, String token){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(token);
-
         DataClient client = APIUtils.getDataClient();
         client.getUserInfo(token).enqueue(new Callback<UserInfo>() {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if (response.isSuccessful()) {
                     UserInfo userInfo = response.body();
-
                     holder.itemCommentBinding.setUser(userInfo);
                 }
             }
@@ -72,21 +67,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
 
             }
         });
-
-
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-//                User user = snapshot.getValue(User.class);
-//
-//                holder.itemCommentBinding.setUser(user);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-//
-//            }
-//        });
     }
 
 

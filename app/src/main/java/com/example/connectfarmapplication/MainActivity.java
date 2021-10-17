@@ -16,6 +16,7 @@ import com.example.connectfarmapplication.ui.ArticlesActivity;
 import com.example.connectfarmapplication.ui.LoginActivity;
 import com.example.connectfarmapplication.ui.PostActivity;
 import com.example.connectfarmapplication.ui.PriceListActivity;
+import com.example.connectfarmapplication.ui.ProfileActivity;
 import com.example.connectfarmapplication.ui.SellActivity;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,13 +61,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, SellActivity.class));
         });
 
-        mainBinding.logout.setOnClickListener(v->{
-            FirebaseAuth.getInstance().signOut();
-            SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("token", null);
-            editor.apply();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        mainBinding.infos.setOnClickListener(v->{
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         });
     }
 }
