@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Article {
     private Integer id;
+    private String access_token;
     private String content;
     private Integer like;
     private String video = null;
@@ -75,4 +76,15 @@ public class Article {
         this.additionalProperties.put(name, value);
     }
 
+    public String getAccess_token() {
+        return access_token;
+    }
+
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+    }
 }

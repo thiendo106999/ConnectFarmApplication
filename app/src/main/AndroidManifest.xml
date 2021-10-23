@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.connectfarmapplication">
 
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -16,37 +17,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ConnectFarmApplication"
         android:usesCleartextTraffic="true"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustResize"
+        tools:targetApi="m">
+        <activity
+            android:name=".ui.PersonalPageActivity"
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".ui.ArticlesActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
         <activity
             android:name=".TestAcvity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.PostTweetActivity"
-            android:exported="true">
-
-        </activity>
-
+            android:exported="true" />
         <activity
             android:name=".ui.SellActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.PriceListActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.ProfileActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -58,9 +60,7 @@
             android:exported="true" />
         <activity
             android:name=".ui.InformationUserActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.VerifyActivity"
             android:exported="true" />
@@ -74,12 +74,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true">
         </activity>
     </application>
 

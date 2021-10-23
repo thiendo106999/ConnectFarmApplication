@@ -12,7 +12,9 @@
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:id="@+id/progress"
-            android:visibility="gone"/>
+            android:background="@color/button_login"
+            android:backgroundTint="@color/button_login"
+            android:visibility="visible"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,7 +57,7 @@
 
                         <TextView
                             android:id="@+id/show_filter"
-                            android:layout_width="50dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
                             android:layout_marginEnd="20dp"
@@ -63,10 +65,10 @@
                             android:drawableRight="@drawable/ic_drop_down_white"
                             android:focusable="true"
                             android:gravity="center"
-                            android:text="Ẩn"
+                            android:text="Lọc"
                             android:textColor="@color/white"
                             android:textSize="18sp"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
                     </Toolbar>
 
                     <TextView
@@ -74,6 +76,91 @@
                         android:layout_height="4dp"
                         android:layout_marginTop="10dp"
                         android:background="@color/silver" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:id="@+id/show_tags">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+
+                            <CheckBox
+                                android:id="@+id/rice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/checkbox"
+                                android:text="Lúa gạo" />
+
+                            <CheckBox
+                                android:id="@+id/vegetable"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/checkbox"
+                                android:text="Hoa màu" />
+
+                            <CheckBox
+                                android:id="@+id/fruits"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/checkbox"
+                                android:text="Trái cây" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+
+                            <CheckBox
+                                android:id="@+id/phan_bon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/checkbox"
+                                android:text="Phân bón" />
+
+                            <CheckBox
+                                android:id="@+id/thuoc_tru_sau"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/checkbox"
+                                android:text="Thuốc trừ sâu" />
+                            <CheckBox
+                                android:id="@+id/nong_cu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/checkbox"
+                                android:text="Nông cụ" />
+                        </LinearLayout>
+                        <Button
+                            android:id="@+id/reload"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/custom_bt_login"
+                            android:backgroundTint="@color/button_login"
+                            android:paddingHorizontal="20dp"
+                            android:text="Chọn"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:background="@color/silver" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

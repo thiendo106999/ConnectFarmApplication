@@ -201,7 +201,7 @@ public class LoginActivity extends BaseActivity {
     private String getPhoneNumberInFormatVietNamese(){
         String phoneNumber = loginBinding.edtPhoneNumber.getText().toString().trim();
         //return "+84" + phoneNumber.substring(1);
-        return "+1 555-521-5554";
+        return "+84968406091";
     }
 
     private void getActivity() {

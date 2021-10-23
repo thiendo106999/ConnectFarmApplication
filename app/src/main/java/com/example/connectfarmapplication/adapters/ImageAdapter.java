@@ -3,6 +3,7 @@ package com.example.connectfarmapplication.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ItemImageBinding;
 import com.example.connectfarmapplication.models.Image;
+import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.ui.FullscreenActivity;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.gson.Gson;
@@ -52,7 +54,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ImageAdapter.MyViewHolder holder, int position) {
-        String path = "http://192.168.1.7:8000/api/storage/" + listImage.get(position).getImage();
+        String path = APIUtils.PATH + listImage.get(position).getImage();
         Glide.with(context)
                 .load(Uri.parse(path))
                 .into(mBinding.image);
@@ -69,16 +71,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
         public MyViewHolder(ItemImageBinding mBinding) {
             super(mBinding.getRoot());
             imageBinding = mBinding;
-            mBinding.image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, FullscreenActivity.class);
-                    Gson gson = new Gson();
-                    String temp = gson.toJson(listImage);
-                    intent.putExtra("list_image", temp);
-                    intent.putExtra("position", getAdapterPosition());
-                    context.startActivity(intent);
-                }
+            mBinding.image.setOnClickListener(v -> {
+                Intent intent = new Intent(context, FullscreenActivity.class);
+                Gson gson = new Gson();
+                String temp = gson.toJson(listImage);
+                intent.putExtra("list_image", temp);
+                intent.putExtra("position", getAdapterPosition());
+                context.startActivity(intent);
             });
         }
     }

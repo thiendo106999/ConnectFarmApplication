@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -43,21 +44,19 @@ public class ArticlesActivity extends AppCompatActivity {
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                 if (response.isSuccessful()) {
                     articleList = (ArrayList<Article>) response.body();
-                    adapter = new ArticlesAdapter(ArticlesActivity.this, articleList);
+                    adapter = new ArticlesAdapter(ArticlesActivity.this, articleList, token);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ArticlesActivity.this);
                     linearLayoutManager.setReverseLayout(true);
                     binding.rcvListNew.setLayoutManager(linearLayoutManager);
                     binding.rcvListNew.setAdapter(adapter);
-                    binding.progress.setVisibility(View.VISIBLE);
                 } else {
                     Log.e("tag ", "onResponse: " + response.toString());
-                    binding.progress.setVisibility(View.VISIBLE);
                 }
+                new Handler().postDelayed(() -> binding.progress.setVisibility(View.GONE), 2000);
             }
             @Override
             public void onFailure(Call<List<Article>> call, Throwable t) {
                 Log.e("TAG", "onFailure: "+  t.getMessage());
-                binding.progress.setVisibility(View.VISIBLE);
             }
         });
         binding.showTweetActivity.setOnClickListener(v -> {
@@ -65,5 +64,59 @@ public class ArticlesActivity extends AppCompatActivity {
         });
 
         binding.back.setOnClickListener(v -> finish());
+
+        binding.showFilter.setOnClickListener(v->{
+            if (binding.showTags.getVisibility() == View.VISIBLE) {
+                binding.showTags.setVisibility(View.GONE);
+            } else binding.showTags.setVisibility(View.VISIBLE);
+
+        });
+
+        binding.reload.setOnClickListener(v->{
+            binding.progress.setVisibility(View.VISIBLE);
+            client.getArticleDependOnTags(getTags()).enqueue(new Callback<List<Article>>() {
+                @Override
+                public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
+                    if (response.isSuccessful()) {
+                        articleList = (ArrayList<Article>) response.body();
+                        adapter = new ArticlesAdapter(ArticlesActivity.this, articleList, token);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ArticlesActivity.this);
+                        linearLayoutManager.setReverseLayout(true);
+                        binding.rcvListNew.setLayoutManager(linearLayoutManager);
+                        binding.rcvListNew.setAdapter(adapter);
+                    } else {
+                        Log.e("tag ", "onResponse: " + response.toString());
+                    }
+                    new Handler().postDelayed(() -> binding.progress.setVisibility(View.GONE), 2000);
+                }
+                @Override
+                public void onFailure(Call<List<Article>> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+  t.getMessage());
+                }
+            });
+        });
+    }
+
+    private String getTags() {
+        String result = "";
+        if (binding.rice.isChecked()) {
+            result += "#luagao ";
+        }
+        if (binding.vegetable.isChecked()) {
+            result += "#hoamau ";
+        }
+        if (binding.fruits.isChecked()) {
+            result += "#traicay ";
+        }
+        if (binding.phanBon.isChecked()) {
+            result += "#phanbon ";
+        }
+        if (binding.thuocTruSau.isChecked()) {
+            result += "#thuoctrusau ";
+        }
+        if (binding.nongCu.isChecked()) {
+            result += "#nongcu ";
+        }
+        return result;
     }
 }

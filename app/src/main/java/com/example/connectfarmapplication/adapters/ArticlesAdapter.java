@@ -2,6 +2,8 @@ package com.example.connectfarmapplication.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import com.example.connectfarmapplication.models.Image;
 import com.example.connectfarmapplication.models.UserInfo;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
+import com.example.connectfarmapplication.ui.ArticlesActivity;
+import com.example.connectfarmapplication.ui.PersonalPageActivity;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -45,10 +49,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
     private SimpleExoPlayer player;
     private CommentAdapter commentAdapter;
     private boolean click = false;
+    private String token;
 
-    public ArticlesAdapter(Context context, ArrayList<Article> list) {
+    public ArticlesAdapter(Context context, ArrayList<Article> list, String token ) {
         this.context = context;
         this.articles = list;
+        this.token = token;
     }
 
     @NonNull
@@ -60,8 +66,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String token = "mciYBoSReiTsoTMmZCrAup9U5Ym1";
-        getUser(token, holder);
+        getUser(articles.get(position).getAccess_token(), holder);
         holder.articleBinding.setArticle(articles.get(position));
 
         if (articles.get(position).getImages() != null) {
@@ -74,7 +79,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
             holder.articleBinding.rcvListImage.setVisibility(View.GONE);
             holder.articleBinding.videoLayout.setVisibility(View.VISIBLE);
         }
-
         getListComment(articles.get(position).getId(), holder);
 
     }
@@ -83,13 +87,10 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
         player = new SimpleExoPlayer.Builder(context).build();
         holder.articleBinding.videoPlayer.setPlayer(player);
         // Build the media item.
-        String path = "http://192.168.1.7:8000/api/storage/" + articles.get(position).getVideo();
+        String path = APIUtils.PATH + articles.get(position).getVideo();
         MediaItem mediaItem = MediaItem.fromUri(Uri.parse(path));
-        // Set the media item to be played.
         player.setMediaItem(mediaItem);
-        // Prepare the player.
         player.prepare();
-        // Start the playback.
     }
     @Override
     public int getItemCount() {
@@ -130,6 +131,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                     databaseReference.child(articles.get(getLayoutPosition()).getId().toString()).push().setValue(comment);
                     articleBinding.edtComment.setText("");
                 }
+            });
+
+            articleBinding.personalPage.setOnClickListener(v->{
+                Intent intent = new Intent(context, PersonalPageActivity.class);
+                intent.putExtra("token", articles.get(getAdapterPosition()).getAccess_token());
+                context.startActivity(intent);
             });
         }
     }

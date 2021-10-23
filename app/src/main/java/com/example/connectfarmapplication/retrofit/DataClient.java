@@ -4,6 +4,7 @@ import com.example.connectfarmapplication.adapters.AgriculturalResponse;
 import com.example.connectfarmapplication.models.Article;
 import com.example.connectfarmapplication.models.CreateArticleResponse;
 import com.example.connectfarmapplication.models.DateAndProvinceResponse;
+import com.example.connectfarmapplication.models.PersonalPageResponse;
 import com.example.connectfarmapplication.models.ProductResponse;
 import com.example.connectfarmapplication.models.UploadResponse;
 import com.example.connectfarmapplication.models.UploadVideoResponse;
@@ -30,6 +31,14 @@ public interface DataClient {
     Call<List<Article>> getArticles();
 
     @FormUrlEncoded
+    @POST("api/articles")
+    Call<List<Article>> getArticleDependOnTags(@Field("tags") String tags);
+
+    @FormUrlEncoded
+    @POST("api/personal_page")
+    Call<PersonalPageResponse> getPersonalPage(@Field("access_token") String token);
+
+    @FormUrlEncoded
     @POST("api/get_user_info")
     Call<UserInfo> getUserInfo(@Field("token") String token);
 
@@ -47,7 +56,6 @@ public interface DataClient {
     @Multipart
     @POST("api/upload_avatar")
     Call<UploadResponse> uploadAvatar(@Part MultipartBody.Part file, @Part("file_name") RequestBody fileName, @Part("access_token") RequestBody token);
-
 
     @FormUrlEncoded
     @POST("api/upload_article")
