@@ -17,6 +17,7 @@ import com.example.connectfarmapplication.models.UserInfo;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.ui.ArticlesActivity;
+import com.example.connectfarmapplication.ui.MainSellActivity;
 import com.example.connectfarmapplication.ui.PriceListActivity;
 import com.example.connectfarmapplication.ui.ProfileActivity;
 import com.example.connectfarmapplication.ui.SellActivity;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mainBinding.btnShop.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, SellActivity.class));
+            startActivity(new Intent(MainActivity.this, MainSellActivity.class));
         });
 
         mainBinding.infos.setOnClickListener(v -> {

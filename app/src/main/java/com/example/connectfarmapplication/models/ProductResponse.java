@@ -1,5 +1,7 @@
 package com.example.connectfarmapplication.models;
 
+import com.example.connectfarmapplication.retrofit.APIUtils;
+
 public class ProductResponse {
     private String image;
     private String name;
@@ -8,9 +10,10 @@ public class ProductResponse {
     private String phone_number;
     private String date;
     private String hexta;
+    private String status;
 
     public String getImage() {
-        return image;
+        return APIUtils.PATH + image;
     }
 
     public void setImage(String image) {
@@ -63,5 +66,13 @@ public class ProductResponse {
 
     public void setHexta(String hexta) {
         this.hexta = hexta;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

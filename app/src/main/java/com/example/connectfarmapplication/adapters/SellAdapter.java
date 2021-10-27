@@ -1,6 +1,7 @@
 package com.example.connectfarmapplication.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,9 @@ public class SellAdapter extends RecyclerView.Adapter<SellAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.setProduct(products.get(position));
+        if (products.get(position).getStatus().equals("registered")) {
+            holder.binding.approve.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -47,7 +51,6 @@ public class SellAdapter extends RecyclerView.Adapter<SellAdapter.MyViewHolder>{
         public MyViewHolder(@NonNull ItemSellBinding item) {
             super(item.getRoot());
             this.binding = item;
-
         }
     }
 }

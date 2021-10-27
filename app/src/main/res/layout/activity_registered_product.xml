@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.RegisteredProductActivity">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/white"
+            android:orientation="vertical">
+            <Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#E4016873">
+
+                <Button
+                    android:id="@+id/back"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/ic_back" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:text="Trở về"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/show_filter"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_drop_down_white"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="Ẩn"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </Toolbar>
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/bg_login" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên nông sản:  "
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/text_color_login"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edt_nong_san"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/black"
+                android:text="Chuối hột"
+                android:layout_marginTop="5dp"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:paddingStart="10dp"
+                android:maxLength="50" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số điện thoại "
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/text_color_login"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edt_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/black"
+                android:text="030020202020"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:paddingStart="10dp"
+                android:maxLength="50"
+                android:textColorHint="@color/silverText"
+                tools:ignore="TextFields" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Địa chỉ"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/text_color_login"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="long an"
+                android:textColor="@color/black"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:maxLength="50"
+                android:paddingStart="10dp"
+                android:layout_marginTop="5dp"
+                android:textColorHint="@color/silverText"
+                tools:ignore="TextFields" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngày thu hoạch  "
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/text_color_login"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edt_date"
+                style="@style/etViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="12-11-2021"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:maxLength="50"
+                android:paddingStart="10dp"
+                android:textColorHint="@color/silverText"
+                tools:ignore="TextFields" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số lượng:  "
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/text_color_login"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edt_hexta"
+                style="@style/etViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/custom_bt_login"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:text="1"
+                android:maxLength="50"
+                android:paddingStart="10dp"
+                android:textColorHint="@color/silverText"
+                tools:ignore="TextFields" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/silver" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loại nông sản:  "
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/text_color_login"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp">
+
+                <RadioButton
+                    android:id="@+id/rice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/text_color_login"
+                    android:checked="true"
+                    android:shadowColor="@color/text_color_login"
+                    android:text="Lúa gạo"
+                    android:textColor="@color/text_color_login" />
+
+                <RadioButton
+                    android:id="@+id/vegetable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/text_color_login"
+                    android:shadowColor="@color/text_color_login"
+                    android:text="Hoa màu"
+                    android:textColor="@color/text_color_login" />
+
+                <RadioButton
+                    android:id="@+id/fruit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/text_color_login"
+                    android:shadowColor="@color/text_color_login"
+                    android:text="Trái cây"
+                    android:textColor="@color/text_color_login" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btn_registered_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="80dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/custom_bt_login"
+                android:backgroundTint="@color/button_login"
+                android:text="Đăng ký"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

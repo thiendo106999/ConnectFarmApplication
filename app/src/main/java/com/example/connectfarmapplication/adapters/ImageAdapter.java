@@ -55,6 +55,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull ImageAdapter.MyViewHolder holder, int position) {
         String path = APIUtils.PATH + listImage.get(position).getImage();
+        Log.e("TAG", "onBindViewHolder: " + path );
         Glide.with(context)
                 .load(Uri.parse(path))
                 .into(mBinding.image);

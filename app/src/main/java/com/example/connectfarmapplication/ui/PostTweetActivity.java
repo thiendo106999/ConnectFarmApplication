@@ -164,9 +164,11 @@ public class PostTweetActivity extends AppCompatActivity {
 
     public void uploadFile(File file, String articleId) {
         // Parsing any Media type file
+        String token = Utils.getToken(PostTweetActivity.this);
+        String temp = token + System.currentTimeMillis() + file.getName().substring(file.getName().lastIndexOf("."));
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), temp);
         RequestBody article_id = RequestBody.create(MediaType.parse("text/plain"), articleId);
 
         DataClient client = APIUtils.getDataClient();

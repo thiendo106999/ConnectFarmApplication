@@ -26,8 +26,8 @@ import retrofit2.Response;
 public class SellActivity extends AppCompatActivity {
     ActivitySellBinding binding;
     private final String TAG = "SellActivity";
-    ArrayAdapter arrayAdapter;
-    SellAdapter adapter ;
+    private ArrayAdapter arrayAdapter;
+    private SellAdapter adapter ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

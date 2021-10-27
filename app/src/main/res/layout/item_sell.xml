@@ -5,16 +5,16 @@
             name="product"
             type="com.example.connectfarmapplication.models.ProductResponse" />
     </data>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginHorizontal="10dp">
 
        <LinearLayout
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:orientation="horizontal">
+           android:orientation="horizontal"
+           android:id="@+id/product">
            <ImageView
                android:layout_width="150dp"
                android:layout_height="150dp"
@@ -69,8 +69,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="4dp"
+            android:layout_below="@id/product"
             android:layout_marginTop="10dp"
             android:background="@color/silver" />
-    </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đang chờ duyệt"
+            android:textSize="20sp"
+            android:id="@+id/approve"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:textColor="#DEFF0000"/>
+    </RelativeLayout>
 
 </layout>

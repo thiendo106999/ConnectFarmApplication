@@ -67,10 +67,20 @@ public interface DataClient {
 
     @POST("api/get_data_price_list")
     Call<DateAndProvinceResponse> getDatesAndProvinces();
+
     @GET("api/set_up_spinner_sell")
     Call<DateAndProvinceResponse> setupSpinnerSell();
 
     @FormUrlEncoded
     @POST("api/products")
     Call<ArrayList<ProductResponse>> getProducts(@Field("date") String date, @Field("kind_id") String kind, @Field("province") String province);
+
+    @Multipart
+    @POST("api/registered_product")
+    Call<UploadResponse> registeredProduct(@Part MultipartBody.Part file, @Part("file_name") RequestBody fileName, @Part("name") RequestBody name, @Part("access_token") RequestBody token,
+                                           @Part("phone_number") RequestBody phone_number, @Part("address") RequestBody address,
+                                           @Part("date") RequestBody date, @Part("kind") RequestBody kind, @Part("hexta") RequestBody hexta);
+    @FormUrlEncoded
+    @POST("api/get_registered_product")
+    Call<ArrayList<ProductResponse>> getRegisteredProduct(@Field("access_token") String access_token);
 }

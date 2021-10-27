@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.MainSellActivity"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical">
+
+        <Toolbar
+            android:id="@+id/ln_search"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#E4016873">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trở về"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </Toolbar>
+
+        <Button
+            android:id="@+id/show_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/custom_bt_main"
+            android:backgroundTint="@color/button_login"
+            android:text="Xem tất cả sản phẩm"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/registered"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="30dp"
+            android:background="@drawable/custom_bt_main"
+            android:backgroundTint="@color/button_login"
+            android:text="Đăng ký bán "
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/storage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/custom_bt_main"
+            android:backgroundTint="@color/button_login"
+            android:text="Danh sách đăng bán"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</layout>
