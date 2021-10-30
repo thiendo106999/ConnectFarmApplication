@@ -8,7 +8,19 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/item"
         android:layout_marginHorizontal="10dp">
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:visibility="visible"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="-15dp"
+            android:backgroundTint="@color/space_transparent"
+            android:src="@drawable/ic_baseline_delete_24" />
 
        <LinearLayout
            android:layout_width="wrap_content"
@@ -63,7 +75,14 @@
                    android:text="@{product.hexta}"
                    android:layout_height="wrap_content"
                    android:textColor="@color/black" />
-
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Đang chờ duyệt"
+                   android:textSize="20sp"
+                   android:id="@+id/approve"
+                   android:visibility="gone"
+                   android:textColor="#DEFF0000"/>
            </LinearLayout>
        </LinearLayout>
         <TextView
@@ -72,16 +91,6 @@
             android:layout_below="@id/product"
             android:layout_marginTop="10dp"
             android:background="@color/silver" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đang chờ duyệt"
-            android:textSize="20sp"
-            android:id="@+id/approve"
-            android:visibility="gone"
-            android:layout_centerInParent="true"
-            android:textColor="#DEFF0000"/>
     </RelativeLayout>
 
 </layout>

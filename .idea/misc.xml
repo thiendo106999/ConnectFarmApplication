@@ -10,8 +10,8 @@
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_fullscreen.xml" value="0.1515625" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_information_user.xml" value="0.2" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_login.xml" value="0.22" />
-        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_main.xml" value="0.12273550724637682" />
-        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_main_sell.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_main_sell.xml" value="0.22" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_my_storage.xml" value="0.1" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_personal_page.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_post.xml" value="0.11666666666666667" />
@@ -27,7 +27,7 @@
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_comment.xml" value="0.1" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_image.xml" value="0.165625" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_new.xml" value="0.25" />
-        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_sell.xml" value="0.10260416666666666" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_sell.xml" value="0.25" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/logo.xml" value="0.20416666666666666" />
       </map>
     </option>

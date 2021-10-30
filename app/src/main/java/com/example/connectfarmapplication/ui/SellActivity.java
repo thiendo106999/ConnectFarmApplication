@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.adapters.SellAdapter;
@@ -33,7 +34,7 @@ public class SellActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(SellActivity.this, R.layout.activity_sell);
-
+        binding.progress.setVisibility(View.VISIBLE);
         getProducts(null, null, null);
         setupSpinner();
         binding.showFilter.setOnClickListener(v->{
@@ -62,17 +63,20 @@ public class SellActivity extends AppCompatActivity {
                 DateAndProvinceResponse data;
                 if (response.isSuccessful()) {
                     data = response.body();
-                    Log.e("TAG", "Get Date and Province: onResponse: " + data.toString());
                     arrayAdapter = new ArrayAdapter(SellActivity.this, R.layout.spinner_text, data.getDates());
                     binding.date.setAdapter(arrayAdapter);
                     arrayAdapter = new ArrayAdapter(SellActivity.this, R.layout.spinner_text, data.getProvinces());
                     binding.province.setAdapter(arrayAdapter);
+                    binding.progress.setVisibility(View.VISIBLE);
                 } else {
                     Log.e(TAG, "Get Date and Province: onResponse is fails: " + response.body() );
+                    binding.progress.setVisibility(View.VISIBLE);
+                    Toast.makeText(SellActivity.this, "Lỗi không thể kết nối server", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<DateAndProvinceResponse> call, Throwable t) {
+                binding.progress.setVisibility(View.VISIBLE);
                 Log.e(TAG, "Get Date and Province: onFailure: " + t.getMessage());
             }
         });
@@ -100,14 +104,18 @@ public class SellActivity extends AppCompatActivity {
                     LinearLayoutManager manager = new LinearLayoutManager(SellActivity.this);
                     binding.list.setLayoutManager(manager);
                     binding.list.setAdapter(adapter);
+                    binding.progress.setVisibility(View.GONE);
                 } else {
                     Log.e(TAG, "onResponse: " + response.body());
+                    binding.progress.setVisibility(View.GONE);
+
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<ProductResponse>> call, Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
+                binding.progress.setVisibility(View.GONE);
             }
         });
     }

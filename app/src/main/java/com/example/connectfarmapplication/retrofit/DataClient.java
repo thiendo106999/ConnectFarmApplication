@@ -17,6 +17,7 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -25,6 +26,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import okhttp3.RequestBody;
+import retrofit2.http.Path;
 
 public interface DataClient {
     @GET("api/articles")
@@ -83,4 +85,8 @@ public interface DataClient {
     @FormUrlEncoded
     @POST("api/get_registered_product")
     Call<ArrayList<ProductResponse>> getRegisteredProduct(@Field("access_token") String access_token);
+
+    @DELETE("api/delete/{id}")
+    Call<UploadResponse> deleteBook(@Path("id") int productId);
+
 }

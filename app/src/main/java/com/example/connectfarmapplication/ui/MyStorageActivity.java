@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.example.connectfarmapplication.R;
@@ -31,6 +32,7 @@ public class MyStorageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(MyStorageActivity.this, R.layout.activity_my_storage);
 
+        binding.progress.setVisibility(View.VISIBLE);
         setupUI();
         binding.back.setOnClickListener(v -> finish());
 
@@ -50,7 +52,9 @@ public class MyStorageActivity extends AppCompatActivity {
                     LinearLayoutManager manager = new LinearLayoutManager(MyStorageActivity.this);
                     binding.list.setLayoutManager(manager);
                     binding.list.setAdapter(adapter);
+                    binding.progress.setVisibility(View.GONE);
                 } else {
+                    binding.progress.setVisibility(View.GONE);
                     Log.e(TAG, "onResponse: " + response.body());
                 }
             }
@@ -58,6 +62,7 @@ public class MyStorageActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<ProductResponse>> call, Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
+                binding.progress.setVisibility(View.GONE);
             }
         });
     }

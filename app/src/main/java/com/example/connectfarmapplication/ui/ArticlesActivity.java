@@ -49,14 +49,16 @@ public class ArticlesActivity extends AppCompatActivity {
                     linearLayoutManager.setReverseLayout(true);
                     binding.rcvListNew.setLayoutManager(linearLayoutManager);
                     binding.rcvListNew.setAdapter(adapter);
+                    binding.progress.setVisibility(View.GONE);
                 } else {
+                    binding.progress.setVisibility(View.GONE);
                     Log.e("tag ", "onResponse: " + response.toString());
                 }
-                new Handler().postDelayed(() -> binding.progress.setVisibility(View.GONE), 2000);
             }
             @Override
             public void onFailure(Call<List<Article>> call, Throwable t) {
                 Log.e("TAG", "onFailure: "+  t.getMessage());
+                binding.progress.setVisibility(View.GONE);
             }
         });
         binding.showTweetActivity.setOnClickListener(v -> {
@@ -84,14 +86,16 @@ public class ArticlesActivity extends AppCompatActivity {
                         linearLayoutManager.setReverseLayout(true);
                         binding.rcvListNew.setLayoutManager(linearLayoutManager);
                         binding.rcvListNew.setAdapter(adapter);
+                        binding.progress.setVisibility(View.GONE);
                     } else {
+                        binding.progress.setVisibility(View.GONE);
                         Log.e("tag ", "onResponse: " + response.toString());
                     }
-                    new Handler().postDelayed(() -> binding.progress.setVisibility(View.GONE), 2000);
                 }
                 @Override
                 public void onFailure(Call<List<Article>> call, Throwable t) {
                     Log.e("TAG", "onFailure: "+  t.getMessage());
+                    binding.progress.setVisibility(View.GONE);
                 }
             });
         });

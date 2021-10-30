@@ -3,6 +3,7 @@ package com.example.connectfarmapplication.models;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 
 public class ProductResponse {
+    private int id;
     private String image;
     private String name;
     private String user_name;
@@ -11,6 +12,14 @@ public class ProductResponse {
     private String date;
     private String hexta;
     private String status;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getImage() {
         return APIUtils.PATH + image;
