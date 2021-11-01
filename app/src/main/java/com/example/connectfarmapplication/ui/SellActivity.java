@@ -67,16 +67,16 @@ public class SellActivity extends AppCompatActivity {
                     binding.date.setAdapter(arrayAdapter);
                     arrayAdapter = new ArrayAdapter(SellActivity.this, R.layout.spinner_text, data.getProvinces());
                     binding.province.setAdapter(arrayAdapter);
-                    binding.progress.setVisibility(View.VISIBLE);
+                    binding.progress.setVisibility(View.GONE);
                 } else {
                     Log.e(TAG, "Get Date and Province: onResponse is fails: " + response.body() );
-                    binding.progress.setVisibility(View.VISIBLE);
+                    binding.progress.setVisibility(View.GONE);
                     Toast.makeText(SellActivity.this, "Lỗi không thể kết nối server", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<DateAndProvinceResponse> call, Throwable t) {
-                binding.progress.setVisibility(View.VISIBLE);
+                binding.progress.setVisibility(View.GONE);
                 Log.e(TAG, "Get Date and Province: onFailure: " + t.getMessage());
             }
         });

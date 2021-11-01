@@ -79,8 +79,16 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
             holder.articleBinding.rcvListImage.setVisibility(View.GONE);
             holder.articleBinding.videoLayout.setVisibility(View.VISIBLE);
         }
+        Log.e("TAG", "onBindViewHolder: " + articles.get(position).getId() );
         getListComment(articles.get(position).getId(), holder);
+    }
 
+    @Override
+    public void onViewDetachedFromWindow(@NonNull MyViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if( player != null) {
+            player.pause();
+        }
     }
 
     private void loadVideo(int position, MyViewHolder holder) {
@@ -128,7 +136,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                     comment.setContent(content);
                     comment.setUser_id(Utils.getToken((Activity) context));
 
-                    databaseReference.child(articles.get(getLayoutPosition()).getId().toString()).push().setValue(comment);
+                    databaseReference.child(articles.get(getAdapterPosition()).getId().toString()).push().setValue(comment);
                     articleBinding.edtComment.setText("");
                 }
             });

@@ -35,7 +35,7 @@ public class PriceListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(PriceListActivity.this, R.layout.activity_price_list);
-
+        setUp();
         getDatesAndProvinces();
         binding.back.setOnClickListener(v -> {
             finish();
@@ -101,6 +101,29 @@ public class PriceListActivity extends BaseActivity {
             @Override
             public void onFailure(Call<DateAndProvinceResponse> call, Throwable t) {
                 Log.e(TAG, "Get Date and Province: onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+    private void setUp() {
+
+        DataClient client = APIUtils.getDataClient();
+        client.getPriceAgricultural( "", "").enqueue(new Callback<ArrayList<AgriculturalResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<AgriculturalResponse>> call, Response<ArrayList<AgriculturalResponse>> response) {
+                ArrayList<AgriculturalResponse> list = new ArrayList<>();
+                if (response.isSuccessful()) {
+                    list = response.body();
+                }
+                PriceAdapter adapter = new PriceAdapter(list, PriceListActivity.this);
+                LinearLayoutManager manager = new LinearLayoutManager(PriceListActivity.this);
+                binding.listPrice.setAdapter(adapter);
+                binding.listPrice.setLayoutManager(manager);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<AgriculturalResponse>> call, Throwable t) {
+
             }
         });
     }

@@ -1,8 +1,12 @@
 package com.example.connectfarmapplication.ui;
 
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +22,9 @@ import com.example.connectfarmapplication.models.Article;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.Utils;
+import com.google.android.exoplayer2.ui.PlayerControlView;
+import com.google.android.exoplayer2.ui.PlayerView;
+
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -86,6 +93,16 @@ public class ArticlesActivity extends AppCompatActivity {
                         linearLayoutManager.setReverseLayout(true);
                         binding.rcvListNew.setLayoutManager(linearLayoutManager);
                         binding.rcvListNew.setAdapter(adapter);
+                       binding.rcvListNew.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                           @Override
+                           public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                               super.onScrolled(recyclerView, dx, dy);
+                               Log.e("TAG", dy + "onScrolled: " + dx );
+                           }
+                       });
+
+
+
                         binding.progress.setVisibility(View.GONE);
                     } else {
                         binding.progress.setVisibility(View.GONE);
