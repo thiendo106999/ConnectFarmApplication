@@ -45,7 +45,7 @@ public class PersonalPageActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     PersonalPageResponse data = response.body();
                     Glide.with(PersonalPageActivity.this)
-                            .load(Uri.parse("http://192.168.1.7:8000/api/storage/" + data.getAvatar()))
+                            .load(Uri.parse(APIUtils.PATH + data.getAvatar()))
                             .placeholder(R.drawable.image)
                             .into(binding.avatar);
                     binding.tvUsername.setText(data.getUser_name());

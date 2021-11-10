@@ -7,10 +7,6 @@
         <variable
             name="article"
             type="com.example.connectfarmapplication.models.Article" />
-
-        <variable
-            name="user"
-            type="com.example.connectfarmapplication.models.UserInfo" />
     </data>
 
     <LinearLayout
@@ -34,7 +30,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_avatar"
-                    setThumbnail="@{user.avatar}"
+                    setThumbnail="@{article.avatar}"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="10dp"
@@ -52,7 +48,7 @@
                         android:id="@+id/txt_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{user.name}"
+                        android:text="@{article.user_name}"
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -136,16 +132,33 @@
                     android:layout_height="4dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/silver" />
-                <Button
-                    android:id="@+id/comment"
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bình luận"
-                    android:textColor="@color/black"
-                    android:background="@color/space_transparent"
-                    android:layout_marginStart="40dp"
-                    android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/ic_comment" />
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:background="@color/space_transparent"
+                        android:drawableStart="@drawable/ic_comment"
+                        android:drawablePadding="10dp"
+                        android:text="Bình luận"
+                        android:textColor="@color/black" />
+                    <Button
+                        android:id="@+id/share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chia sẻ"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="40dp"
+                        android:textColor="@color/black"
+                        android:background="@color/space_transparent"
+                        android:layout_marginStart="40dp"
+                        android:drawablePadding="10dp"
+                        android:drawableStart="@drawable/ic_baseline_share_24" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/show_comment"

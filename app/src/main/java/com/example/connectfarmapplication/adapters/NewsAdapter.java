@@ -1,20 +1,11 @@
 package com.example.connectfarmapplication.adapters;
 
-import static android.content.ContentValues.TAG;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -30,7 +21,6 @@ import com.example.connectfarmapplication.models.New;
 import com.example.connectfarmapplication.models.User;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.Utils;
-import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder>{
@@ -88,33 +77,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder>{
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild("video")) {
-                    for (DataSnapshot s : snapshot.child("video").getChildren()) {
-                        player = new SimpleExoPlayer.Builder(context).build();
-                        holder.mBinding.videoPlayer.setPlayer(player);
-                        // Build the media item.
-                        MediaItem mediaItem = MediaItem.fromUri(Uri.parse(s.getValue(String.class)));
-                        // Set the media item to be played.
-                        player.setMediaItem(mediaItem);
-                        // Prepare the player.
-                        player.prepare();
-                        // Start the playback.
-                        player.play();
-                        holder.mBinding.videoLayout.setVisibility(View.VISIBLE);
-                        holder.mBinding.rcvListImage.setVisibility(View.GONE);
-                    }
-                } else {
-                    ArrayList<Image> listImage = new ArrayList<>();
-                    for (DataSnapshot s : snapshot.child("list_image").getChildren()) {
-                        listImage.add(new Image(s.getValue(String.class)));
-                    }
-                    adapter = new ImageAdapter(context, listImage);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
-                    holder.mBinding.rcvListImage.setLayoutManager(linearLayoutManager);
-                    holder.mBinding.rcvListImage.setAdapter(adapter);
-                    holder.mBinding.videoLayout.setVisibility(View.GONE);
-                    holder.mBinding.rcvListImage.setVisibility(View.VISIBLE);
+                ArrayList<Image> listImage = new ArrayList<>();
+                for (DataSnapshot s : snapshot.child("list_image").getChildren()) {
+                    listImage.add(new Image(s.getValue(String.class)));
                 }
+                adapter = new ImageAdapter(context, listImage);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+                holder.mBinding.rcvListImage.setLayoutManager(linearLayoutManager);
+                holder.mBinding.rcvListImage.setAdapter(adapter);
+                holder.mBinding.videoLayout.setVisibility(View.GONE);
+                holder.mBinding.rcvListImage.setVisibility(View.VISIBLE);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

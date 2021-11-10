@@ -61,7 +61,7 @@ public interface DataClient {
 
     @FormUrlEncoded
     @POST("api/upload_article")
-    Call<CreateArticleResponse> uploadArticle(@Header("access_token") String access_token , @Field("content") String content, @Field("tags") String tags);
+    Call<CreateArticleResponse> uploadArticle(@Header("access_token") String access_token , @Field("content") String content, @Field("tags") String tags, @Field("media_id") String media_id);
 
     @FormUrlEncoded
     @POST("api/price_list")

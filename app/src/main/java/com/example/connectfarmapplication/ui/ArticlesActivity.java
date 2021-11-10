@@ -93,7 +93,7 @@ public class ArticlesActivity extends AppCompatActivity {
                         linearLayoutManager.setReverseLayout(true);
                         binding.rcvListNew.setLayoutManager(linearLayoutManager);
                         binding.rcvListNew.setAdapter(adapter);
-                       binding.rcvListNew.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        binding.rcvListNew.addOnScrollListener(new RecyclerView.OnScrollListener() {
                            @Override
                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                                super.onScrolled(recyclerView, dx, dy);
@@ -101,13 +101,10 @@ public class ArticlesActivity extends AppCompatActivity {
                            }
                        });
 
-
-
-                        binding.progress.setVisibility(View.GONE);
                     } else {
-                        binding.progress.setVisibility(View.GONE);
                         Log.e("tag ", "onResponse: " + response.toString());
                     }
+                    binding.progress.setVisibility(View.GONE);
                 }
                 @Override
                 public void onFailure(Call<List<Article>> call, Throwable t) {

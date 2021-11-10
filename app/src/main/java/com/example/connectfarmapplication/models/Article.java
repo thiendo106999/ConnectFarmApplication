@@ -10,15 +10,33 @@ import java.util.Map;
 public class Article {
     private Integer id;
     private String access_token;
+    private String user_name;
     private String content;
     private Integer like;
     private String video = null;
-    private List<String> images = null;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private String images = null;
+    private String avatar = null;
+
 
     @SerializedName("created_at")
     @Expose
     private String createdAt;
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public Integer getId() {
         return id;
@@ -60,20 +78,12 @@ public class Article {
         this.video = video;
     }
 
-    public List<String> getImages() {
+    public String getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(String images) {
         this.images = images;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
     public String getAccess_token() {
@@ -84,7 +94,4 @@ public class Article {
         this.access_token = access_token;
     }
 
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
 }

@@ -18,7 +18,8 @@
         android:theme="@style/Theme.ConnectFarmApplication"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize"
-        tools:targetApi="m">
+        tools:targetApi="m"
+        >
         <activity
             android:name=".ui.MyStorageActivity"
             android:exported="true" />

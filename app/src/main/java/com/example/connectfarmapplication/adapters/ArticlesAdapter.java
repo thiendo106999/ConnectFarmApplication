@@ -2,8 +2,8 @@ package com.example.connectfarmapplication.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +21,10 @@ import com.example.connectfarmapplication.databinding.ItemArticleBinding;
 import com.example.connectfarmapplication.models.Article;
 import com.example.connectfarmapplication.models.Comment;
 import com.example.connectfarmapplication.models.Image;
+import com.example.connectfarmapplication.models.UploadResponse;
 import com.example.connectfarmapplication.models.UserInfo;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
-import com.example.connectfarmapplication.ui.ArticlesActivity;
 import com.example.connectfarmapplication.ui.PersonalPageActivity;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.android.exoplayer2.MediaItem;
@@ -66,7 +67,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        getUser(articles.get(position).getAccess_token(), holder);
         holder.articleBinding.setArticle(articles.get(position));
 
         if (articles.get(position).getImages() != null) {
@@ -79,7 +79,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
             holder.articleBinding.rcvListImage.setVisibility(View.GONE);
             holder.articleBinding.videoLayout.setVisibility(View.VISIBLE);
         }
-        Log.e("TAG", "onBindViewHolder: " + articles.get(position).getId() );
         getListComment(articles.get(position).getId(), holder);
     }
 
@@ -141,43 +140,56 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                 }
             });
 
+            articleBinding.share.setOnClickListener(v -> {
+                new AlertDialog.Builder(context)
+                        .setTitle("Chia sẻ")
+                        .setMessage("Bạn muốn chia sẻ bài đăng này?")
+                        .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton("Hủy", null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            });
+
             articleBinding.personalPage.setOnClickListener(v->{
                 Intent intent = new Intent(context, PersonalPageActivity.class);
-                intent.putExtra("token", articles.get(getAdapterPosition()).getAccess_token());
+                intent.putExtra("token", articles.get(getAbsoluteAdapterPosition()).getAccess_token());
                 context.startActivity(intent);
             });
         }
     }
-    private void getUser(String token, MyViewHolder holder) {
-        DataClient client = APIUtils.getDataClient();
-        client.getUserInfo(token).enqueue(new Callback<UserInfo>() {
-            @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                if (response.isSuccessful()) {
-                    UserInfo userInfo = response.body();
-                    holder.articleBinding.setUser(userInfo);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
-
-            }
-            });
-    }
 
     private void loadImages(int position, MyViewHolder holder){
-        ArrayList<Image> listImage = new ArrayList<>();
-        ArrayList<String> images = (ArrayList<String>) articles.get(position).getImages();
-        for (String image : images) {
-            listImage.add(new Image(image));
-        }
-        ImageAdapter adapter = new ImageAdapter(context, listImage);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
-        holder.articleBinding.rcvListImage.setLayoutManager(linearLayoutManager);
-        holder.articleBinding.rcvListImage.setAdapter(adapter);
-        holder.articleBinding.videoLayout.setVisibility(View.GONE);
-        holder.articleBinding.rcvListImage.setVisibility(View.VISIBLE);
+        String images =  articles.get(position).getImages();
+        databaseReference = FirebaseDatabase.getInstance().getReference("News").child(images);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Image> listImage = new ArrayList<>();
+                for (DataSnapshot s : snapshot.child("list_image").getChildren()) {
+                    listImage.add(new Image(s.getValue(String.class)));
+                }
+                ImageAdapter adapter = new ImageAdapter(context, listImage);
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+                holder.articleBinding.rcvListImage.setLayoutManager(linearLayoutManager);
+                holder.articleBinding.rcvListImage.setAdapter(adapter);
+                holder.articleBinding.rcvListImage.setVisibility(View.VISIBLE);
+                holder.articleBinding.videoLayout.setVisibility(View.GONE);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void getListComment(int idNew, ArticlesAdapter.MyViewHolder holder) {

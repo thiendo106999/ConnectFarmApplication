@@ -23,6 +23,11 @@ import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.RealPathUtil;
 import com.example.connectfarmapplication.utils.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -192,7 +197,12 @@ public class PostTweetActivity extends AppCompatActivity {
         String token = preferences.getString("token", "");
         String content = statusBinding.edtContent.getText().toString().trim();
         String tags = getTags();
-        client.uploadArticle(token, content, tags).enqueue(new Callback<CreateArticleResponse>() {
+        String media_id = token + System.currentTimeMillis();
+        if (mArrayUri != null && mArrayUri.size() > 0) {
+            uploadImage(media_id);
+        }
+
+        client.uploadArticle(token, content, tags, media_id).enqueue(new Callback<CreateArticleResponse>() {
             @Override
             public void onResponse(Call<CreateArticleResponse> call, Response<CreateArticleResponse> response) {
                 if (response.isSuccessful()) {
@@ -200,11 +210,8 @@ public class PostTweetActivity extends AppCompatActivity {
                     if (videoUri != null) {
                         uploadFile(new File(RealPathUtil.getPath(PostTweetActivity.this, videoUri)), body.getArticle_id());
                     }
-                    if (mArrayUri != null && mArrayUri.size() > 0) {
-                        for (Uri uri : mArrayUri) {
-                            uploadFile(new File(RealPathUtil.getPath(PostTweetActivity.this, uri)), body.getArticle_id());
-                        }
-                    }
+                    String articles_id = String.valueOf(body.getArticle_id());
+                    Log.e(TAG, "onResponse: " + articles_id);
                 }
             }
 
@@ -213,5 +220,23 @@ public class PostTweetActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
+    }
+
+    private void uploadImage(String articles_id) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("News");
+        for (Uri file : mArrayUri) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference("UploadImage");
+
+            storageReference.child(articles_id).child(file.getLastPathSegment()).
+                    putFile(file).addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    databaseReference.child(articles_id).child("list_image").push().setValue(uri.toString());
+                }
+            }));
+
+        }
+
     }
 }
