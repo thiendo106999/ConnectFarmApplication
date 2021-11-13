@@ -29,8 +29,8 @@ import okhttp3.RequestBody;
 import retrofit2.http.Path;
 
 public interface DataClient {
-    @GET("api/articles")
-    Call<List<Article>> getArticles();
+    @GET("api/articles/{access_token}")
+    Call<List<Article>> getArticles(@Path("access_token") String token);
 
     @FormUrlEncoded
     @POST("api/articles")
@@ -89,4 +89,11 @@ public interface DataClient {
     @DELETE("api/delete/{id}")
     Call<UploadResponse> deleteBook(@Path("id") int productId);
 
+    @FormUrlEncoded
+    @POST("api/share")
+    Call<Void> shareArticle(@Field("access_token") String token, @Field("article_id") int article_id);
+
+    @FormUrlEncoded
+    @POST("api/like")
+    Call<Void> likeArticle(@Field("access_token") String token, @Field("article_id") int article_id);
 }

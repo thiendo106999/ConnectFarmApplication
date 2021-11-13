@@ -13,6 +13,7 @@ public class Article {
     private String user_name;
     private String content;
     private Integer like;
+    private boolean liked;
     private String video = null;
     private String images = null;
     private String avatar = null;
@@ -32,6 +33,14 @@ public class Article {
 
     public String getAvatar() {
         return avatar;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     public void setAvatar(String avatar) {
@@ -56,6 +65,9 @@ public class Article {
 
     public Integer getLike() {
         return like;
+    }
+    public String getLikeString() {
+        return like + "";
     }
 
     public void setLike(Integer like) {

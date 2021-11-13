@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -51,6 +54,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
     private CommentAdapter commentAdapter;
     private boolean click = false;
     private String token;
+    private String TAG = "ArticlesAdapter";
+    protected DataClient client = APIUtils.getDataClient();
+
 
     public ArticlesAdapter(Context context, ArrayList<Article> list, String token ) {
         this.context = context;
@@ -68,6 +74,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.articleBinding.setArticle(articles.get(position));
+
+        if (articles.get(position).isLiked()) {
+            holder.articleBinding.like.setTextColor(Color.BLUE);
+            Drawable img = context.getResources().getDrawable(R.drawable.heartdo);
+            holder.articleBinding.icHeart.setImageDrawable(img);
+        }
 
         if (articles.get(position).getImages() != null) {
             loadImages(position, holder);
@@ -146,10 +158,21 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                         .setMessage("Bạn muốn chia sẻ bài đăng này?")
                         .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                client.shareArticle(token, articles.get(getAbsoluteAdapterPosition()).getId()).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        Log.e(TAG, "onResponse: " + response.body() );
+                                        Toast.makeText(context, "Chia sẻ thành công", Toast.LENGTH_SHORT).show();
+                                    }
 
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Toast.makeText(context, "Chia sẻ thất bại", Toast.LENGTH_SHORT).show();
+                                        Log.e(TAG, "onFailure: " + t.getMessage() );
+                                    }
+                                });
                             }
                         })
-
                         // A null listener allows the button to dismiss the dialog and take no further action.
                         .setNegativeButton("Hủy", null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -161,6 +184,36 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                 Intent intent = new Intent(context, PersonalPageActivity.class);
                 intent.putExtra("token", articles.get(getAbsoluteAdapterPosition()).getAccess_token());
                 context.startActivity(intent);
+            });
+
+            articleBinding.icHeart.setOnClickListener(v -> {
+                int like = Integer.parseInt(articleBinding.like.getText().toString());
+
+                if (articles.get(getAbsoluteAdapterPosition()).isLiked()) {
+                    articles.get(getAbsoluteAdapterPosition()).setLiked(false);
+                    Drawable black = context.getResources().getDrawable(R.drawable.heartden);
+                    articleBinding.icHeart.setImageDrawable(black);
+                    articleBinding.like.setTextColor(Color.BLACK);
+                    articleBinding.like.setText(String.valueOf(--like));
+                } else {
+                    articles.get(getAbsoluteAdapterPosition()).setLiked(true);
+                    Drawable red = context.getResources().getDrawable(R.drawable.heartdo);
+                    articleBinding.icHeart.setImageDrawable(red);
+                    articleBinding.like.setTextColor(Color.BLUE);
+                    articleBinding.like.setText(String.valueOf(++like));
+                }
+
+
+
+                client.likeArticle(token, articles.get(getAbsoluteAdapterPosition()).getId()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                    }
+                });
             });
         }
     }
