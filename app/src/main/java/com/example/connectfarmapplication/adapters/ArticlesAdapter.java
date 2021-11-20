@@ -4,21 +4,27 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ItemArticleBinding;
 import com.example.connectfarmapplication.models.Article;
@@ -40,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,26 +55,29 @@ import retrofit2.Response;
 public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<Article> articles;
-    private ItemArticleBinding articleBinding;
+//    private ItemArticleBinding articleBinding;
     private DatabaseReference databaseReference;
-    private SimpleExoPlayer player;
+    SimpleExoPlayer player;
     private CommentAdapter commentAdapter;
     private boolean click = false;
     private String token;
     private String TAG = "ArticlesAdapter";
     protected DataClient client = APIUtils.getDataClient();
+    private int page;
+    private final int PERSONAL_PAGE = 1;
+    private final int ARTICLE_PAGE = 0;
 
-
-    public ArticlesAdapter(Context context, ArrayList<Article> list, String token ) {
+    public ArticlesAdapter(Context context, ArrayList<Article> list, String token, int page) {
         this.context = context;
         this.articles = list;
         this.token = token;
+        this.page = page;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        articleBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_article, parent, false);
+        ItemArticleBinding articleBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_article, parent, false);
         return new MyViewHolder(articleBinding);
     }
 
@@ -94,22 +104,29 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
         getListComment(articles.get(position).getId(), holder);
     }
 
-    @Override
-    public void onViewDetachedFromWindow(@NonNull MyViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        if( player != null) {
-            player.pause();
-        }
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void loadVideo(int position, MyViewHolder holder) {
+        holder.articleBinding.videoPlayer.getHorizontalScrollbarThumbDrawable();
     }
 
-    private void loadVideo(int position, MyViewHolder holder) {
-        player = new SimpleExoPlayer.Builder(context).build();
-        holder.articleBinding.videoPlayer.setPlayer(player);
-        // Build the media item.
-        String path = APIUtils.PATH + articles.get(position).getVideo();
-        MediaItem mediaItem = MediaItem.fromUri(Uri.parse(path));
-        player.setMediaItem(mediaItem);
-        player.prepare();
+    public static Bitmap retriveVideoFrameFromVideo(String videoPath) throws Throwable {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever mediaMetadataRetriever = null;
+        try {
+            mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+            //   mediaMetadataRetriever.setDataSource(videoPath);
+            bitmap = mediaMetadataRetriever.getFrameAtTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Throwable("Exception in retriveVideoFrameFromVideo(String videoPath)" + e.getMessage());
+
+        } finally {
+            if (mediaMetadataRetriever != null) {
+                mediaMetadataRetriever.release();
+            }
+        }
+        return bitmap;
     }
     @Override
     public int getItemCount() {
@@ -123,6 +140,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
             this.articleBinding = articleBinding;
 
             articleBinding.btnPlay.setOnClickListener(v -> {
+                articleBinding.thumbnail.setVisibility(View.GONE);
+                player = new SimpleExoPlayer.Builder(context).build();
+                articleBinding.videoPlayer.setPlayer(player);
+                String path = APIUtils.PATH + articles.get(getAbsoluteAdapterPosition()).getVideo();
+                Log.e(TAG, "loadVideo: " + path );
+                MediaItem mediaItem = MediaItem.fromUri(Uri.parse(path));
+                player.setMediaItem(mediaItem);
+                player.prepare();
                 player.play();
                 articleBinding.btnPlay.setVisibility(View.GONE);
             });
@@ -203,9 +228,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                     articleBinding.like.setText(String.valueOf(++like));
                 }
 
-
-
-                client.likeArticle(token, articles.get(getAbsoluteAdapterPosition()).getId()).enqueue(new Callback<Void>() {
+                client.likeArticle(Utils.getToken((Activity) context), articles.get(getAbsoluteAdapterPosition()).getId()).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                     }
@@ -214,6 +237,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.MyView
                     public void onFailure(Call<Void> call, Throwable t) {
                     }
                 });
+
+
             });
         }
     }

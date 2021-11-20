@@ -21,6 +21,7 @@ import com.example.connectfarmapplication.databinding.ActivityArticlesBinding;
 import com.example.connectfarmapplication.models.Article;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
+import com.example.connectfarmapplication.utils.EndlessRecyclerViewScrollListener;
 import com.example.connectfarmapplication.utils.Utils;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -37,11 +38,13 @@ public class ArticlesActivity extends AppCompatActivity {
     private ArrayList<Article> articleList;
     private ArticlesAdapter adapter;
     DataClient client;
+    boolean isLoading = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_articles);
 
+        setUpUI();
         binding.progress.setVisibility(View.VISIBLE);
         token = Utils.getToken(this);
 
@@ -51,11 +54,17 @@ public class ArticlesActivity extends AppCompatActivity {
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                 if (response.isSuccessful()) {
                     articleList = (ArrayList<Article>) response.body();
-                    adapter = new ArticlesAdapter(ArticlesActivity.this, articleList, token);
+                    adapter = new ArticlesAdapter(ArticlesActivity.this, articleList, token, 0);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ArticlesActivity.this);
                     linearLayoutManager.setReverseLayout(true);
                     binding.rcvListNew.setLayoutManager(linearLayoutManager);
                     binding.rcvListNew.setAdapter(adapter);
+                    binding.rcvListNew.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                        @Override
+                        public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+
+                        }
+                    });
                     binding.progress.setVisibility(View.GONE);
                 } else {
                     binding.progress.setVisibility(View.GONE);
@@ -88,19 +97,11 @@ public class ArticlesActivity extends AppCompatActivity {
                 public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                     if (response.isSuccessful()) {
                         articleList = (ArrayList<Article>) response.body();
-                        adapter = new ArticlesAdapter(ArticlesActivity.this, articleList, token);
+                        adapter = new ArticlesAdapter(ArticlesActivity.this, articleList, token, 0);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ArticlesActivity.this);
                         linearLayoutManager.setReverseLayout(true);
                         binding.rcvListNew.setLayoutManager(linearLayoutManager);
                         binding.rcvListNew.setAdapter(adapter);
-                        binding.rcvListNew.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                           @Override
-                           public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                               super.onScrolled(recyclerView, dx, dy);
-                               Log.e("TAG", dy + "onScrolled: " + dx );
-                           }
-                       });
-
                     } else {
                         Log.e("tag ", "onResponse: " + response.toString());
                     }
@@ -112,6 +113,22 @@ public class ArticlesActivity extends AppCompatActivity {
                     binding.progress.setVisibility(View.GONE);
                 }
             });
+        });
+    }
+
+    private void setUpUI() {
+        DataClient client = APIUtils.getDataClient();
+        client.getRuleWritable(Utils.getToken(ArticlesActivity.this)).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.body().equals("true")) {
+                    binding.layoutPost.setVisibility(View.VISIBLE);
+                } else binding.layoutPost.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+            }
         });
     }
 
@@ -137,4 +154,5 @@ public class ArticlesActivity extends AppCompatActivity {
         }
         return result;
     }
+
 }

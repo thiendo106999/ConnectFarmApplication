@@ -22,6 +22,7 @@ import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.RealPathUtil;
 import com.example.connectfarmapplication.utils.Utils;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
@@ -54,6 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         binding.logout.setOnClickListener(v->{
             FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
+
             SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("token", null);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -75,6 +76,15 @@
                 android:background="@drawable/custom_bt_login"
                 android:backgroundTint="@color/button_login"
                 android:text="Gửi" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                facebook:com_facebook_login_text="Đăng nhập sử dụng tài khoản Facebook" />
         </LinearLayout>
 
         <LinearLayout

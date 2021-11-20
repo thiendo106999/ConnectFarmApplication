@@ -16,6 +16,7 @@ import com.example.connectfarmapplication.databinding.ActivityPersonalPageBindin
 import com.example.connectfarmapplication.models.PersonalPageResponse;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
+import com.example.connectfarmapplication.utils.Utils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,8 +39,9 @@ public class PersonalPageActivity extends AppCompatActivity {
     private void setUI() {
         Intent intent = getIntent();
         String token = intent.getStringExtra("token") == null ? "mciYBoSReiTsoTMmZCrAup9U5Ym1" : intent.getStringExtra("token");
+        String my_token = Utils.getToken(PersonalPageActivity.this);
         DataClient client = APIUtils.getDataClient();
-        client.getPersonalPage(token).enqueue(new Callback<PersonalPageResponse>() {
+        client.getPersonalPage(token,  my_token).enqueue(new Callback<PersonalPageResponse>() {
             @Override
             public void onResponse(Call<PersonalPageResponse> call, Response<PersonalPageResponse> response) {
                 if (response.isSuccessful()) {
@@ -49,7 +51,7 @@ public class PersonalPageActivity extends AppCompatActivity {
                             .placeholder(R.drawable.image)
                             .into(binding.avatar);
                     binding.tvUsername.setText(data.getUser_name());
-                    ArticlesAdapter adapter = new ArticlesAdapter(PersonalPageActivity.this, data.getArticles(), token);
+                    ArticlesAdapter adapter = new ArticlesAdapter(PersonalPageActivity.this, data.getArticles(), token, 1);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PersonalPageActivity.this);
                     linearLayoutManager.setReverseLayout(true);
                     binding.articles.setLayoutManager(linearLayoutManager);

@@ -99,17 +99,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:id="@+id/video_layout">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/thumbnail"/>
 
                     <com.google.android.exoplayer2.ui.PlayerView
                         android:id="@+id/video_player"
                         android:layout_width="match_parent"
                         android:layout_height="250dp" />
+
                     <ImageButton
+                        android:id="@+id/btn_play"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/ic_play"
-                        android:id="@+id/btn_play"
-                        android:layout_centerInParent="true"/>
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/ic_play" />
                 </RelativeLayout>
 
                 <TextView
@@ -165,7 +170,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="40dp"
                         android:background="@color/space_transparent"
-                        android:drawableStart="@drawable/ic_baseline_share_24"
+                        android:drawableStart="@drawable/ic_share_organge"
                         android:drawablePadding="10dp"
                         android:text="Chia sẻ"
                         android:textColor="@color/black" />
@@ -197,14 +202,14 @@
                         <RelativeLayout
                             android:id="@+id/relaSend"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:weightSum="10">
 
                             <EditText
                                 android:id="@+id/edt_comment"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="50dp"
                                 android:layout_marginEnd="60dp"
                                 android:padding="5dp"
                                 android:textColor="@color/black" />

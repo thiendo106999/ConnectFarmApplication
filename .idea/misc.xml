@@ -6,6 +6,8 @@
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable-v24/custom_bt_login.xml" value="0.215625" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable-v24/heartden.xml" value="0.1125" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable-v24/ic_comment.xml" value="0.2046875" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.1" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/drawable/ic_share_organge.xml" value="0.1" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_articles.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_base.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/activity_fullscreen.xml" value="0.1515625" />
@@ -28,6 +30,7 @@
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_article.xml" value="0.22" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_comment.xml" value="0.1" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_image.xml" value="0.165625" />
+        <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_loading.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_new.xml" value="0.25" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/item_sell.xml" value="0.25" />
         <entry key="..\:/Users/84348/FlutterProject/ConnectFarmApplication/app/src/main/res/layout/logo.xml" value="0.20416666666666666" />

@@ -1,16 +1,15 @@
 package com.example.connectfarmapplication.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ActivityRegisteredProductBinding;
@@ -19,7 +18,11 @@ import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
 import com.example.connectfarmapplication.utils.RealPathUtil;
 import com.example.connectfarmapplication.utils.Utils;
-import com.google.firebase.firestore.util.ApiUtil;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +38,7 @@ public class RegisteredProductActivity extends AppCompatActivity {
     private ActivityRegisteredProductBinding binding;
     private File file;
     private static final String TAG = "RegisteredProduct";
+    Uri chosenImageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +74,7 @@ public class RegisteredProductActivity extends AppCompatActivity {
                             Toast.makeText(RegisteredProductActivity.this, "Bạn đã đăng ký thành công. Vui lòng chờ duyệt.", Toast.LENGTH_LONG).show();
                             finish();
                         } else {
-                            Log.e(TAG, "onResponse: "+ response.body());
+                            Log.e(TAG, "onResponse: " + response.body());
                         }
                     }
 
@@ -79,6 +83,8 @@ public class RegisteredProductActivity extends AppCompatActivity {
                         Log.e(TAG, "onFailure: " + t.getMessage());
                     }
                 });
+
+
             }
         });
     }
@@ -119,7 +125,7 @@ public class RegisteredProductActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            Uri chosenImageUri = data.getData();
+            chosenImageUri = data.getData();
             Bitmap mBitmap = null;
             try {
                 mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), chosenImageUri);

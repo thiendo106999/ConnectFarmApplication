@@ -22,7 +22,7 @@ public class ProductResponse {
     }
 
     public String getImage() {
-        return APIUtils.PATH + image;
+        return image;
     }
 
     public void setImage(String image) {

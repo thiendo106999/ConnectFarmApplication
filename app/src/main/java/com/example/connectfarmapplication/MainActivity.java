@@ -1,9 +1,13 @@
 package com.example.connectfarmapplication;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,13 +27,16 @@ import com.example.connectfarmapplication.ui.ProfileActivity;
 import com.example.connectfarmapplication.ui.SellActivity;
 import com.example.connectfarmapplication.utils.Utils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mainBinding;
-    private final String TAG = "main";
+    private static final String TAG = "main";
     private final int STORAGE_PERMISSION_CODE = 1;
 
     @Override
@@ -38,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         setupUI();
-        //    setupPermission();
+
+//        setupPermission();
 
         mainBinding.btnPrice.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, PriceListActivity.class));
@@ -56,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         });
     }
+
 
     private void setupPermission() {
         if (ContextCompat.checkSelfPermission(MainActivity.this,

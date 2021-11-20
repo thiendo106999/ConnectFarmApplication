@@ -1,8 +1,13 @@
 package com.example.connectfarmapplication.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -15,22 +20,25 @@ import com.example.connectfarmapplication.R;
 import com.example.connectfarmapplication.databinding.ActivityLoginBinding;
 import com.example.connectfarmapplication.retrofit.APIUtils;
 import com.example.connectfarmapplication.retrofit.DataClient;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,15 +50,20 @@ public class LoginActivity extends BaseActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
     private FirebaseAuth firebaseAuth;
     private String mVerifyId;
-    private final String TAG  = "Login";
+    private static final String TAG  = "Login";
     private SharedPreferences sharedPreferences;
     private Intent intent;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
+
         sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
         if (token != null) {
@@ -61,13 +74,12 @@ public class LoginActivity extends BaseActivity {
         }
         loginBinding.setObj(LoginActivity.this);
         enabledVerifyForm(false);
-        firebaseAuth = FirebaseAuth.getInstance();
+       // firebaseAuth = FirebaseAuth.getInstance();
 
         //hide keyboard
         loginBinding.lnParent.setOnClickListener(v -> {
             hideKeyboard(loginBinding.lnParent);
         });
-
         //send phone number to get opt verify
         loginBinding.btnSent.setOnClickListener(v -> {
             String phoneNumber = loginBinding.edtPhoneNumber.getText().toString().trim();
@@ -127,11 +139,51 @@ public class LoginActivity extends BaseActivity {
             resendVerificationCode(getPhoneNumberInFormatVietNamese(), forceResendingToken);
         });
 
+        // Callback registration
+        callbackManager = CallbackManager.Factory.create();
+
+        loginBinding.loginButton.setReadPermissions("email");
+        loginBinding.loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("token",  loginResult.getAccessToken().getUserId());
+                editor.apply();
+                getActivity();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(LoginActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         loginBinding.btnBack.setOnClickListener(v -> {
             enabledVerifyForm(false);
             enableTouchScreen();
             loginBinding.progress.setVisibility(View.GONE);
         });
+    }
+    public static void printHashKey(Context pContext) {
+        try {
+            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i(TAG, "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e(TAG, "printHashKey()", e);
+        }
     }
 
     private void startPhoneNumberVerification() {
@@ -230,5 +282,11 @@ public class LoginActivity extends BaseActivity {
             });
             enableTouchScreen();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

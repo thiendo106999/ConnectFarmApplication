@@ -32,13 +32,16 @@ public interface DataClient {
     @GET("api/articles/{access_token}")
     Call<List<Article>> getArticles(@Path("access_token") String token);
 
+    @GET("api/rule/{access_token}")
+    Call<String> getRuleWritable(@Path("access_token") String token);
+
     @FormUrlEncoded
     @POST("api/articles")
     Call<List<Article>> getArticleDependOnTags(@Field("tags") String tags);
 
     @FormUrlEncoded
     @POST("api/personal_page")
-    Call<PersonalPageResponse> getPersonalPage(@Field("access_token") String token);
+    Call<PersonalPageResponse> getPersonalPage(@Field("access_token") String token, @Field("my_access_token") String my_token);
 
     @FormUrlEncoded
     @POST("api/get_user_info")

@@ -71,6 +71,7 @@ public class PostTweetActivity extends AppCompatActivity {
                 Toast.makeText(PostTweetActivity.this, "Trường chủ đề không được bỏ trống", Toast.LENGTH_SHORT).show();
             } else {
                 postArticle();
+                Toast.makeText(PostTweetActivity.this, "Đăng bài thành công", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -197,8 +198,9 @@ public class PostTweetActivity extends AppCompatActivity {
         String token = preferences.getString("token", "");
         String content = statusBinding.edtContent.getText().toString().trim();
         String tags = getTags();
-        String media_id = token + System.currentTimeMillis();
+        String media_id = null;
         if (mArrayUri != null && mArrayUri.size() > 0) {
+            media_id = token + System.currentTimeMillis();
             uploadImage(media_id);
         }
 
